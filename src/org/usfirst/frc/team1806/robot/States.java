@@ -2,47 +2,73 @@ package org.usfirst.frc.team1806.robot;
 
 public class States {
 	
-	private enum secondStageState{
+	public enum secondStageState{
 		SECOND_STAGE_HOLDING, SECOND_STAGE_RELEASED
 	}
-	private enum liftState{
+	public enum liftState{
 		LIFT_MOVING_UP, LIFT_MOVING_DOWN, LIFT_STOPPED
 	}
-	private enum clampState{
+	public enum clampState{
 		ARMS_CLAMPED, ARMS_OPEN
 	}
-	private enum extendState{
+	public enum extendState{
 		ARMS_EXTENDED, ARMS_RETRACTED
 	}
-	private enum liftPosition{
+	public enum liftPosition{
 		HOLDING_STATE, ZEROED, OTHER
 	}
 	
+	public enum robotMode{
+		AUTOSTACK, MANUAL
+	}
+	
+	public enum elevatorCommand{
+		WAITING, MOVETONEXT
+	}
+	
+	public enum autoStackPosition{
+		WAITING, INPROGRESS
+	}
 	//Occurrences local_Occurrences = Occurrences.ELEVATOR_STOP;
 	private secondStageState secondStageStateTracker = secondStageState.SECOND_STAGE_RELEASED;
 	private liftState liftStateTracker = liftState.LIFT_STOPPED;
 	private clampState clampStateTracker = clampState.ARMS_OPEN;
 	private extendState extendStateTracker = extendState.ARMS_RETRACTED;
 	private liftPosition liftPositionTracker = liftPosition.ZEROED;
+	private robotMode robotModeTracker = robotMode.AUTOSTACK;
+	private elevatorCommand elevatorCommandTracker = elevatorCommand.WAITING;
+	private autoStackPosition autoStackPositionTracker = autoStackPosition.WAITING;
 	
-	public String getSecondStageState(){
-		return secondStageStateTracker.toString();
+	public States.secondStageState getSecondStageState(){
+		return secondStageStateTracker;
 	}
 	
-	public String getLiftState(){
-		return liftStateTracker.toString();
+	public States.liftState getLiftState(){
+		return liftStateTracker;
 	}
 	
-	public String getClampState(){
-		return clampStateTracker.toString();
+	public States.clampState getClampState(){
+		return clampStateTracker;
 	}
 	
-	public String getExtendState(){
-		return extendStateTracker.toString();
+	public States.extendState getExtendState(){
+		return extendStateTracker;
 	}
 	
-	public String getLiftPositionStr(){
-		return liftPositionTracker.toString();
+	public States.liftPosition getLiftPositionStr(){
+		return liftPositionTracker;
+	}
+	
+	public States.robotMode getRobotMode(){
+		return robotModeTracker;
+	}
+	
+	public States.elevatorCommand getElevatorCommand(){
+		return elevatorCommandTracker;
+	}
+	
+	public States.autoStackPosition getAutoStackPos(){
+		return autoStackPositionTracker;
 	}
 	
 	public void setSecondStageStateHolding(){
@@ -91,6 +117,30 @@ public class States {
 	
 	public void setLiftPositionOther(){
 		liftPositionTracker = liftPosition.OTHER;
+	}
+	
+	public void setRobotModeAutoStack(){
+		robotModeTracker = robotMode.AUTOSTACK;
+	}
+	
+	public void setRobotModeManual(){
+		robotModeTracker = robotMode.MANUAL;
+	}
+	
+	public void setElevatorCommandMoveToNext(){
+		elevatorCommandTracker = elevatorCommand.MOVETONEXT;
+	}
+	
+	public void setElevatorCommandWaiting(){
+		elevatorCommandTracker = elevatorCommand.WAITING;
+	}
+	
+	public void setAutoStackPositionWaiting(){
+		autoStackPositionTracker = autoStackPosition.WAITING;
+	}
+	
+	public void setAutoStackPositionInProgress(){
+		autoStackPositionTracker = autoStackPosition.INPROGRESS;
 	}
 	
 	

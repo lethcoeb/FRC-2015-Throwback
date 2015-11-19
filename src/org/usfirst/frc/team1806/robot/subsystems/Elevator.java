@@ -28,7 +28,7 @@ public class Elevator extends PIDSubsystem {
 	DigitalInput topLimit = new DigitalInput(RobotMap.topSensor);
 	DigitalInput opticalSensor = new DigitalInput(RobotMap.photoSensor);
 	
-	public States statesObj = new States();
+	//public States statesObj = new States();
 
 
 	
@@ -75,7 +75,7 @@ public class Elevator extends PIDSubsystem {
 		brakeOff();
 		if(topLimit.get()){
 			elevatorMotorTalon.set(1);
-			statesObj.setLiftStateMovingUp();
+			Robot.statesObj.setLiftStateMovingUp();
 		}
 		else{
 			System.out.println("Invalid - elevator too high");
@@ -91,7 +91,7 @@ public class Elevator extends PIDSubsystem {
 		if(bottomLimit.get()){
 			brakeOff();
 			elevatorMotorTalon.set(-.75);
-			statesObj.setLiftStateMovingDown();
+			Robot.statesObj.setLiftStateMovingDown();
 		}
 		else{
 			System.out.println("Invalid - elevator too low");
@@ -103,7 +103,7 @@ public class Elevator extends PIDSubsystem {
 		if(bottomLimit.get()){
 			brakeOff();
 			elevatorMotorTalon.set(-.3);
-			statesObj.setLiftStateMovingDown();
+			Robot.statesObj.setLiftStateMovingDown();
 		}
 		else{
 			System.out.println("invalid - elevator too low");
@@ -114,47 +114,47 @@ public class Elevator extends PIDSubsystem {
 	public void stop(){
 		elevatorMotorTalon.set(0);
 		brakeOn();
-		statesObj.setLiftStateStopped();
+		Robot.statesObj.setLiftStateStopped();
 	}
 	
 	public void openArms(){
 		armsPinch.set(DoubleSolenoid.Value.kForward);
-		statesObj.setClampStateOpen();
+		Robot.statesObj.setClampStateOpen();
 	}
 	
 	public void closeArms(){
 		armsPinch.set(DoubleSolenoid.Value.kReverse);
-		statesObj.setClampStateClamped();
+		Robot.statesObj.setClampStateClamped();
 	}
 	
 	public void extendArms(){
 		armsExtend.set(DoubleSolenoid.Value.kForward);
-		statesObj.setExtendStateExtended();
+		Robot.statesObj.setExtendStateExtended();
 	}
 	
 	public void retractArms(){
 		armsExtend.set(DoubleSolenoid.Value.kReverse);
-		statesObj.setExtendStateRetracted();
+		Robot.statesObj.setExtendStateRetracted();
 	}
 	
 	public void secondStageHold(){
 		secondStage.set(DoubleSolenoid.Value.kReverse);
-		statesObj.setSecondStageStateHolding();
+		Robot.statesObj.setSecondStageStateHolding();
 	}
 	
 	public void secondStageRelease(){
 		secondStage.set(DoubleSolenoid.Value.kForward);
-		statesObj.setSecondStageStateReleased();
+		Robot.statesObj.setSecondStageStateReleased();
 	}
 	
 	public void secondStageFlip(){
 		if (secondStage.get() == DoubleSolenoid.Value.kReverse) {
 			secondStage.set(DoubleSolenoid.Value.kForward);
-			statesObj.setSecondStageStateReleased();
+			Robot.statesObj.setSecondStageStateReleased();
 		}
 		else{
 			secondStage.set(DoubleSolenoid.Value.kReverse);
-			statesObj.setSecondStageStateHolding();
+			Robot.statesObj.setSecondStageStateHolding();
 		}
 	}
 	

@@ -35,7 +35,7 @@ public class LiftReset extends Command {
     	Robot.lift.stop();
     	Robot.lift.openArms();
     	Robot.lift.resetEncoder();
-    	Robot.lift.statesObj.setLiftPositionZeroed();
+    	Robot.statesObj.setLiftPositionZeroed();
     }
 
     // Called when another command which requires one or more of the same

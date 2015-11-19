@@ -1,25 +1,24 @@
 package org.usfirst.frc.team1806.robot.commands.elevatorCommands;
 
+import org.usfirst.frc.team1806.robot.OI;
 import org.usfirst.frc.team1806.robot.Robot;
+import org.usfirst.frc.team1806.robot.States;
+import org.usfirst.frc.team1806.robot.XboxController;
+import org.usfirst.frc.team1806.robot.States.robotMode;
 
-import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class MoveToTarget extends Command {
+public class waitForOpButton extends Command {
 
-	private double m_targetPos;
-    public MoveToTarget(double targetPos) {
-    	requires(Robot.lift);
-    	m_targetPos = targetPos;
+    public waitForOpButton() {
+        requires(Robot.lift);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.enable();
-    	Robot.lift.setSetpoint(m_targetPos);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -28,19 +27,21 @@ public class MoveToTarget extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Math.abs(Robot.lift.getSetpoint() - Robot.lift.getLiftEncoder()) < 10);
+    	if(Robot.statesObj.getElevatorCommand() == States.elevatorCommand.MOVETONEXT){
+    		return true;
+    	}else{
+    		return false;
+    	}
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	System.out.println("pid movement to " + m_targetPos + " finished");
-    	Robot.lift.disable();
-    	Robot.lift.stop();
+    	System.out.println("Got button A");
+    	Robot.statesObj.setElevatorCommandWaiting();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	Robot.lift.disable();
     }
 }

@@ -18,6 +18,7 @@ import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 import org.usfirst.frc.team1806.robot.commands.HoldTote;
 import org.usfirst.frc.team1806.robot.commands.LiftDown;
 import org.usfirst.frc.team1806.robot.commands.StateMachine;
+import org.usfirst.frc.team1806.robot.commands.elevatorCommands.AutoStack;
 import org.usfirst.frc.team1806.robot.subsystems.Elevator;
 
 
@@ -34,13 +35,14 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 	
 	
-	private static final XboxController dc = new XboxController(RobotMap.driverController);
+	public static final XboxController dc = new XboxController(RobotMap.driverController);
+	public static final XboxController oc = new XboxController(RobotMap.operatorController);
 	private static final RobotDrive dt = new RobotDrive(RobotMap.leftDriveMotor, RobotMap.rightDriveMotor);
-	public static final Elevator lift = new Elevator(5.0 , 0.0 , 1.0);
-
+	public static final Elevator lift = new Elevator(0.003 , 0.0001, 0.0);
 
     Command autonomousCommand;
     Command StateMachine;
+    public static States statesObj = new States();
     
     //variables!!!!!!!!!!!!!!
     
@@ -110,8 +112,8 @@ public class Robot extends IterativeRobot {
         dt.arcadeDrive(dc.getLeftJoyY(), -dc.getRightJoyX());
         
         //add listener class? (For optical sensor, limit switches, etc.
-        if(lift.getOpticalSensor()){
-        	new HoldTote().start();
+        if(lift.getOpticalSensor() && statesObj.getAutoStackPos() == States.autoStackPosition.WAITING){
+        	new AutoStack().start();
         }
         writeToDashboard();
         
@@ -124,10 +126,10 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putBoolean("Optical Sensor",lift.getOpticalSensor());
         SmartDashboard.putBoolean("Top Limit",lift.getTopLimit());
         SmartDashboard.putBoolean("Bottom Limit",lift.getBottomLimit());
-        SmartDashboard.putString("2StageState", lift.statesObj.getSecondStageState());
-        SmartDashboard.putString("Lift State", lift.statesObj.getLiftState());
-        SmartDashboard.putString("Clamp State", lift.statesObj.getClampState());
-        SmartDashboard.putString("Extend State", lift.statesObj.getExtendState());
+        SmartDashboard.putString("2StageState", Robot.statesObj.getSecondStageState().toString());
+        SmartDashboard.putString("Lift State", Robot.statesObj.getLiftState().toString());
+        SmartDashboard.putString("Clamp State", Robot.statesObj.getClampState().toString());
+        SmartDashboard.putString("Extend State", Robot.statesObj.getExtendState().toString());
     }
     
     /**
