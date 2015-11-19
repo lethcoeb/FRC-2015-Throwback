@@ -7,13 +7,14 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.omg.CORBA.PRIVATE_MEMBER;
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.usfirst.frc.team1806.robot.States;
-import org.usfirst.frc.team1806.robot.States.ElevatorStates;
 import org.usfirst.frc.team1806.robot.commands.GrabAndReset;
 import org.usfirst.frc.team1806.robot.commands.HoldTote;
 import org.usfirst.frc.team1806.robot.commands.LiftDown;
 import org.usfirst.frc.team1806.robot.commands.LiftReset;
 import org.usfirst.frc.team1806.robot.commands.LiftUp;
 import org.usfirst.frc.team1806.robot.commands.MoveUpToY;
+import org.usfirst.frc.team1806.robot.commands.elevatorCommands.MoveToTarget;
+
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
 /**
@@ -63,7 +64,7 @@ public class OI {
 		JoystickButton buttonRB = new JoystickButton(driverController, 6);
 		
 		
-		buttonA.whenPressed(new LiftUp());
+		buttonA.whenPressed(new MoveToTarget());
 		buttonB.whenPressed(new LiftDown());
 		buttonX.whenPressed(new HoldTote());
 		buttonY.whenPressed(new MoveUpToY(1500));

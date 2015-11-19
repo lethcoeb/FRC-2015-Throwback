@@ -1,24 +1,23 @@
-package org.usfirst.frc.team1806.robot.commands;
+package org.usfirst.frc.team1806.robot.commands.elevatorCommands;
 
 import org.usfirst.frc.team1806.robot.Robot;
+import org.usfirst.frc.team1806.robot.commands.LiftDown;
+import org.usfirst.frc.team1806.robot.subsystems.Elevator;
 
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class LiftReset extends Command {
+public class SecondStageSwap extends Command {
 
-    public LiftReset() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	requires(Robot.lift);
+    public SecondStageSwap() {
+        requires(Robot.lift);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.moveDownSlow();
+    	Robot.lift.secondStageFlip();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -27,15 +26,11 @@ public class LiftReset extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.lift.getBottomLimit();
+        return true;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.lift.stop();
-    	Robot.lift.openArms();
-    	Robot.lift.resetEncoder();
-    	Robot.lift.statesObj.setLiftPositionZeroed();
     }
 
     // Called when another command which requires one or more of the same

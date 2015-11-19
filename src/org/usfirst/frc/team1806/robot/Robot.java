@@ -36,7 +36,7 @@ public class Robot extends IterativeRobot {
 	
 	private static final XboxController dc = new XboxController(RobotMap.driverController);
 	private static final RobotDrive dt = new RobotDrive(RobotMap.leftDriveMotor, RobotMap.rightDriveMotor);
-	public static final Elevator lift = new Elevator();
+	public static final Elevator lift = new Elevator(5.0 , 0.0 , 1.0);
 
 
     Command autonomousCommand;
@@ -84,11 +84,11 @@ public class Robot extends IterativeRobot {
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
         //new StateMachine().start();
-        System.out.println("state machine started");
-        System.out.print("state machine started");
-        
+
         //COMPRESSOR CODE HERE!
         c.setClosedLoopControl(true);
+        
+        System.out.println("teleop initialized fam");
         
                 
 
@@ -115,7 +115,6 @@ public class Robot extends IterativeRobot {
         }
         writeToDashboard();
         
-        System.out.println("IT'S FUCKIN LIT");
         
     }
     
@@ -123,6 +122,12 @@ public class Robot extends IterativeRobot {
     	SmartDashboard.putNumber("Lift Encoder Value", lift.getLiftEncoder());
         SmartDashboard.putNumber("Lift Power",lift.getLiftPowerPercentage());
         SmartDashboard.putBoolean("Optical Sensor",lift.getOpticalSensor());
+        SmartDashboard.putBoolean("Top Limit",lift.getTopLimit());
+        SmartDashboard.putBoolean("Bottom Limit",lift.getBottomLimit());
+        SmartDashboard.putString("2StageState", lift.statesObj.getSecondStageState());
+        SmartDashboard.putString("Lift State", lift.statesObj.getLiftState());
+        SmartDashboard.putString("Clamp State", lift.statesObj.getClampState());
+        SmartDashboard.putString("Extend State", lift.statesObj.getExtendState());
     }
     
     /**

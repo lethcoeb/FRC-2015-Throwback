@@ -1,41 +1,39 @@
-package org.usfirst.frc.team1806.robot.commands;
+package org.usfirst.frc.team1806.robot.commands.elevatorCommands;
 
 import org.usfirst.frc.team1806.robot.Robot;
 
-import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class LiftReset extends Command {
+public class MoveToTarget extends Command {
 
-    public LiftReset() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+    public MoveToTarget() {
     	requires(Robot.lift);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.moveDownSlow();
+    	Robot.lift.enable();
+    	Robot.lift.setSetpoint(500.0);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	System.out.println("pid cmd running");
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.lift.getBottomLimit();
+    	//return false;
+        return (Math.abs(Robot.lift.getSetpoint() - Robot.lift.getLiftEncoder()) < 5);
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.lift.stop();
-    	Robot.lift.openArms();
-    	Robot.lift.resetEncoder();
-    	Robot.lift.statesObj.setLiftPositionZeroed();
+    	System.out.println("pid command finished");
     }
 
     // Called when another command which requires one or more of the same
