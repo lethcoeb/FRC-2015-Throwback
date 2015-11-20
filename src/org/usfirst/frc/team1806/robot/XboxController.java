@@ -9,17 +9,13 @@ import edu.wpi.first.wpilibj.DriverStation;
  * Use an XBox controller like a regular Joystick class
  *
  * @author Jon Morton
- * THX JON
+ * 
+ * ^^THX JON^^
  */
 public class XboxController {
 
     private DriverStation _ds;
     private final int _port;
-    
-    private final int _a = 1;
-    private final int _b = 2;
-    private final int _x = 3;
-    private final int _y = 4;
 
     public XboxController(int port) {
         _ds = DriverStation.getInstance();
@@ -47,6 +43,7 @@ public class XboxController {
      *
      * @return
      */
+    
     public double getRightTrigger() {
         return Math.max(getRawAxis(3), 0);
     }

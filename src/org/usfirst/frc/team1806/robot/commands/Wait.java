@@ -1,44 +1,38 @@
 package org.usfirst.frc.team1806.robot.commands;
 
-import org.usfirst.frc.team1806.robot.Robot;
-
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class MoveUpToY extends Command {
+public class Wait extends Command {
 
-	private int targetPos;
-	private boolean quit = false;
+	Timer t;
+	private long m_seconds;
 	
-    public MoveUpToY(int encVal) {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	requires(Robot.lift);
-    	targetPos = encVal;
+    public Wait(long seconds) {
+    	m_seconds = seconds;
+
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.moveUp();
+    	t = new Timer();
+    	t.start();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(Robot.lift.getLiftEncoder() > targetPos){
-    		quit = true;
-    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return quit;
+        return (t.get() == m_seconds);
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.lift.stop();
     }
 
     // Called when another command which requires one or more of the same

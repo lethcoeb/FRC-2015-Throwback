@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1806.robot.commands;
+package org.usfirst.frc.team1806.robot.commands.elevatorCommands;
 
 import org.usfirst.frc.team1806.robot.Robot;
 
@@ -7,17 +7,15 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class MoveToZero extends Command {
+public class ExtendArms extends Command {
 
-    public MoveToZero() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	requires(Robot.lift);
+    public ExtendArms() {
+        requires(Robot.lift);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.moveDown();
+    	Robot.lift.extendArms();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -26,7 +24,7 @@ public class MoveToZero extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Robot.lift.getLiftEncoder() < 100);
+        return true;
     }
 
     // Called once after isFinished returns true

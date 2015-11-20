@@ -2,7 +2,6 @@ package org.usfirst.frc.team1806.robot.commands.elevatorCommands;
 
 import org.usfirst.frc.team1806.robot.Robot;
 import org.usfirst.frc.team1806.robot.RobotMap;
-import org.usfirst.frc.team1806.robot.commands.MoveToZero;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 

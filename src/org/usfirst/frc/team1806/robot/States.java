@@ -55,7 +55,7 @@ public class States {
 		return extendStateTracker;
 	}
 	
-	public States.liftPosition getLiftPositionStr(){
+	public States.liftPosition getLiftPosition(){
 		return liftPositionTracker;
 	}
 	

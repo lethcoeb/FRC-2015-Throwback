@@ -70,6 +70,12 @@ public class Elevator extends PIDSubsystem {
 		setAbsoluteTolerance(30);
 	}
 	
+	public void manualMove(double speed){
+		brakeOff();
+		if(!topLimit.get() || !bottomLimit.get()){
+			elevatorMotorTalon.set(speed);
+		}
+	}
 	//make it do shit
 	public void moveUp(){
 		brakeOff();
