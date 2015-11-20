@@ -110,7 +110,7 @@ public class Robot extends IterativeRobot {
         Scheduler.getInstance().run();
         
         dt.arcadeDrive(dc.getLeftJoyY(), -dc.getRightJoyX());
-        
+        oi.update();
         //add listener class? (For optical sensor, limit switches, etc.
         if(lift.getOpticalSensor() && statesObj.getAutoStackPos() == States.autoStackPosition.WAITING){
         	new AutoStack().start();

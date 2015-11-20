@@ -36,48 +36,26 @@ public class OI {
 	private Latch robotModeLatch = new Latch();
 	private CommandGroup manualGroup = new CommandGroup();
 	
+	private double manualLiftPower;
+	
+	JoystickButton driverButtonA = new JoystickButton(driverController, 1);
+	JoystickButton driverButtonB = new JoystickButton(driverController, 2);
+	JoystickButton driverButtonX = new JoystickButton(driverController, 3);
+	JoystickButton driverButtonY = new JoystickButton(driverController, 4);
+	JoystickButton driverButtonLB = new JoystickButton(driverController, 5);
+	JoystickButton driverButtonRB = new JoystickButton(driverController, 6);
+	
+	JoystickButton operatorButtonA = new JoystickButton(operatorController, 1);
+	JoystickButton operatorButtonX = new JoystickButton(operatorController, 3);
+	JoystickButton operatorButtonY = new JoystickButton(operatorController, 4);
+	JoystickButton operatorButtonLB = new JoystickButton(operatorController, 5);
+	JoystickButton operatorButtonRB = new JoystickButton(operatorController, 6);
+	
 	public OI(){
 	
-		/*if(driverController.getButtonA()){
-			new LiftUp().start();
-		}
-		
-		if(driverController.getButtonB()){
-			new LiftDown().start();
-		}
-		
-		if(driverController.getButtonX()){
-			new HoldTote().start();
-		}
-		
-		if(driverController.getButtonY()){
-			new MoveUpToY(1500).start();
-		}*/
-		
-		/*if(driverController.getButtonLB() && statesRequests.elevatorStates == ElevatorStates.HOLDING){
-			new GrabAndReset().start();
-		}*/
-		
-		
-		
-		JoystickButton driverButtonA = new JoystickButton(driverController, 1);
-		JoystickButton driverButtonB = new JoystickButton(driverController, 2);
-		JoystickButton driverButtonX = new JoystickButton(driverController, 3);
-		JoystickButton driverButtonY = new JoystickButton(driverController, 4);
-		JoystickButton driverButtonLB = new JoystickButton(driverController, 5);
-		JoystickButton driverButtonRB = new JoystickButton(driverController, 6);
-		
-		JoystickButton operatorButtonA = new JoystickButton(operatorController, 1);
-		JoystickButton operatorButtonX = new JoystickButton(operatorController, 3);
-		JoystickButton operatorButtonY = new JoystickButton(operatorController, 4);
-		JoystickButton operatorButtonLB = new JoystickButton(operatorController, 5);
-		JoystickButton operatorButtonRB = new JoystickButton(operatorController, 6);
-		
-		//buttonA.whenPressed(new AutoStack());
-		//buttonB.whenPressed(new LiftDown());
-		//buttonX.whenPressed(new HoldTote());
-		//buttonY.whenPressed(new MoveUpToY(1500));
-		
+	}
+	
+	public void update(){
 
 		//functions independent of auto/manual
 		if(driverController.getRawAxis(2) > .5){
@@ -118,19 +96,34 @@ public class OI {
 		 */
 		
 		if(Robot.statesObj.getRobotMode() == States.robotMode.MANUAL){
-			if(armsClampLatch.update(operatorController.getRawButton(3))){
-				manualGroup.addParallel(new ArmsControl("flipClamp"));
-			}if(armsExtendLatch.update(operatorController.getRawButton(4))){
-				manualGroup.addParallel(new ArmsControl("extendFlip"));
-			}if(Math.abs(operatorController.getRawAxis(1)) < Constants.operatorLS_Y_Deadzone){
-				manualGroup.addParallel(new ManualMove(operatorController.getRawAxis(1)));
+			
+
+			
+			manualLiftPower = -operatorController.getRawAxis(1);
+			System.out.println("is safe? " + Robot.lift.isSafe(manualLiftPower));
+			
+			if(armsClampLatch.update(operatorController.getRawButton(4))){
+				if(Robot.statesObj.extendStateTracker == States.extendState.ARMS_EXTENDED){
+					Robot.lift.retractArms();
+				}else{
+					Robot.lift.extendArms();
+				}
+				
+			}if(armsExtendLatch.update(operatorController.getRawButton(3))){
+				if(Robot.statesObj.clampStateTracker == States.clampState.ARMS_CLAMPED){
+					Robot.lift.openArms();
+				}else{
+					Robot.lift.closeArms();
+				}
+				
+			}if(Math.abs(manualLiftPower) > Constants.operatorLS_Y_Deadzone && Robot.lift.isSafe(manualLiftPower)){
+				Robot.lift.manualMove(manualLiftPower);
+			}else{
+				Robot.lift.stop();
 			}
 		}
-		
-		
-		
-		
 	}
-	
 }
+	
+
 

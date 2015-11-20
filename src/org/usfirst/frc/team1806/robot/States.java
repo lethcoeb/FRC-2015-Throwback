@@ -30,14 +30,14 @@ public class States {
 		WAITING, INPROGRESS
 	}
 	//Occurrences local_Occurrences = Occurrences.ELEVATOR_STOP;
-	private secondStageState secondStageStateTracker = secondStageState.SECOND_STAGE_RELEASED;
-	private liftState liftStateTracker = liftState.LIFT_STOPPED;
-	private clampState clampStateTracker = clampState.ARMS_OPEN;
-	private extendState extendStateTracker = extendState.ARMS_RETRACTED;
-	private liftPosition liftPositionTracker = liftPosition.ZEROED;
-	private robotMode robotModeTracker = robotMode.AUTOSTACK;
-	private elevatorCommand elevatorCommandTracker = elevatorCommand.WAITING;
-	private autoStackPosition autoStackPositionTracker = autoStackPosition.WAITING;
+	public secondStageState secondStageStateTracker = secondStageState.SECOND_STAGE_RELEASED;
+	public liftState liftStateTracker = liftState.LIFT_STOPPED;
+	public clampState clampStateTracker = clampState.ARMS_OPEN;
+	public extendState extendStateTracker = extendState.ARMS_RETRACTED;
+	public liftPosition liftPositionTracker = liftPosition.ZEROED;
+	public robotMode robotModeTracker = robotMode.AUTOSTACK;
+	public elevatorCommand elevatorCommandTracker = elevatorCommand.WAITING;
+	public autoStackPosition autoStackPositionTracker = autoStackPosition.WAITING;
 	
 	public States.secondStageState getSecondStageState(){
 		return secondStageStateTracker;

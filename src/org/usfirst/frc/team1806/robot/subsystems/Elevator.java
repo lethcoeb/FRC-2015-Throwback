@@ -63,6 +63,17 @@ public class Elevator extends PIDSubsystem {
 		return ((elevatorMotorTalon.getRaw()-1011) * 100/525);
 	}
 	
+	public boolean isSafe(double liftPower){
+		
+		//if youre at the top and sending power up, it's unsafe. vice versa
+		//limit switches are reversed because the sensors are backwards
+		if((!topLimit.get() && liftPower > 0)  || (!bottomLimit.get() && liftPower < 0)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
 	//constructor
 	public Elevator(double P, double I, double D){
 		super(P, I, D);
@@ -71,8 +82,12 @@ public class Elevator extends PIDSubsystem {
 	}
 	
 	public void manualMove(double speed){
-		brakeOff();
-		if(!topLimit.get() || !bottomLimit.get()){
+		
+		
+		if((!bottomLimit.get() && speed < 0)  ||  (!topLimit.get() && speed > 0)){
+			System.out.println("no can do cracker jack");
+		}else{
+			brakeOff();
 			elevatorMotorTalon.set(speed);
 		}
 	}
