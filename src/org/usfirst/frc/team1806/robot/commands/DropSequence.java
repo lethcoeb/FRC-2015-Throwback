@@ -16,6 +16,7 @@ public class DropSequence extends CommandGroup {
     	
     	//if arms extended, drop on platform and release
     	if(Robot.statesObj.getExtendState() == States.extendState.ARMS_EXTENDED){
+    		//need to  add code to drop stack on platform
     		addSequential(new OpenArms());
     	}
     	

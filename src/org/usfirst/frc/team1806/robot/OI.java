@@ -52,17 +52,19 @@ public class OI {
 	JoystickButton operatorButtonRB = new JoystickButton(operatorController, 6);
 	
 	public OI(){
-	
+		
+		//buttons that are always listened for
+		driverButtonRB.whenPressed(new LiftReset());
+		operatorButtonLB.whenPressed(new DropSequence());
 	}
 	
 	public void update(){
 
 		//functions independent of auto/manual
-		if(driverController.getRawAxis(2) > .5){
-			new DropSequence();
-		}
 		
-		driverButtonRB.whenPressed(new LiftReset());
+		
+		
+
 		
 		if(robotModeLatch.update(operatorController.getRawButton(6))){
 			if(Robot.statesObj.getRobotMode() == States.robotMode.AUTOSTACK){
@@ -100,7 +102,7 @@ public class OI {
 
 			
 			manualLiftPower = -operatorController.getRawAxis(1);
-			System.out.println("is safe? " + Robot.lift.isSafe(manualLiftPower));
+			//System.out.println("is safe? " + Robot.lift.isSafe(manualLiftPower));
 			
 			if(armsClampLatch.update(operatorController.getRawButton(4))){
 				if(Robot.statesObj.extendStateTracker == States.extendState.ARMS_EXTENDED){
@@ -122,6 +124,10 @@ public class OI {
 				Robot.lift.stop();
 			}
 		}
+		
+		/*if(operatorController.getRawAxis(2) > .5){
+			new DropSequence();
+		}*/
 	}
 }
 	
