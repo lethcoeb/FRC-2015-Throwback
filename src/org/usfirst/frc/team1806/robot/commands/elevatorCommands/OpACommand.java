@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1806.robot.commands.elevatorCommands;
 
 import org.usfirst.frc.team1806.robot.Robot;
+import org.usfirst.frc.team1806.robot.States.elevatorCommand;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -17,7 +18,7 @@ public class OpACommand extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	System.out.println("operator a value received");
-		Robot.statesObj.setElevatorCommandMoveToNext();
+    	Robot.statesObj.elevatorCommandTracker = elevatorCommand.MOVETONEXT;
     }
 
     // Called repeatedly when this Command is scheduled to run

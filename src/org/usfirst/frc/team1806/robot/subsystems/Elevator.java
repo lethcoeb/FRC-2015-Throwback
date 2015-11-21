@@ -101,7 +101,6 @@ public class Elevator extends PIDSubsystem {
 		brakeOff();
 		if(topLimit.get()){
 			elevatorMotorTalon.set(1);
-			Robot.statesObj.setLiftStateMovingUp();
 		}
 		else{
 			System.out.println("Invalid - elevator too high");
@@ -117,7 +116,6 @@ public class Elevator extends PIDSubsystem {
 		if(bottomLimit.get()){
 			brakeOff();
 			elevatorMotorTalon.set(-.75);
-			Robot.statesObj.setLiftStateMovingDown();
 		}
 		else{
 			System.out.println("Invalid - elevator too low");
@@ -129,7 +127,6 @@ public class Elevator extends PIDSubsystem {
 		if(bottomLimit.get()){
 			brakeOff();
 			elevatorMotorTalon.set(-.3);
-			Robot.statesObj.setLiftStateMovingDown();
 		}
 		else{
 			System.out.println("invalid - elevator too low");
@@ -140,52 +137,42 @@ public class Elevator extends PIDSubsystem {
 	public void stop(){
 		elevatorMotorTalon.set(0);
 		brakeOn();
-		Robot.statesObj.setLiftStateStopped();
 	}
 	
 	public void zeroPower(){
 		elevatorMotorTalon.set(0);
-		Robot.statesObj.setLiftStateStopped();
 	}
 	
 	public void openArms(){
 		armsPinch.set(DoubleSolenoid.Value.kForward);
-		Robot.statesObj.setClampStateOpen();
 	}
 	
 	public void closeArms(){
 		armsPinch.set(DoubleSolenoid.Value.kReverse);
-		Robot.statesObj.setClampStateClamped();
 	}
 	
 	public void extendArms(){
-		armsExtend.set(DoubleSolenoid.Value.kForward);
-		Robot.statesObj.setExtendStateExtended();
+		armsExtend.set(DoubleSolenoid.Value.kReverse);
 	}
 	
 	public void retractArms(){
-		armsExtend.set(DoubleSolenoid.Value.kReverse);
-		Robot.statesObj.setExtendStateRetracted();
+		armsExtend.set(DoubleSolenoid.Value.kForward);
 	}
 	
 	public void secondStageHold(){
 		secondStage.set(DoubleSolenoid.Value.kForward);
-		Robot.statesObj.setSecondStageStateHolding();
 	}
 	
 	public void secondStageRelease(){
 		secondStage.set(DoubleSolenoid.Value.kReverse);
-		Robot.statesObj.setSecondStageStateReleased();
 	}
 	
 	public void secondStageFlip(){
 		if (secondStage.get() == DoubleSolenoid.Value.kReverse) {
 			secondStage.set(DoubleSolenoid.Value.kForward);
-			Robot.statesObj.setSecondStageStateReleased();
 		}
 		else{
 			secondStage.set(DoubleSolenoid.Value.kReverse);
-			Robot.statesObj.setSecondStageStateHolding();
 		}
 	}
 	

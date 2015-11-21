@@ -7,8 +7,10 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.omg.CORBA.PRIVATE_MEMBER;
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.usfirst.frc.team1806.robot.States;
+import org.usfirst.frc.team1806.robot.States.robotMode;
 import org.usfirst.frc.team1806.robot.commands.IntakeCommands.IntakeRun;
 import org.usfirst.frc.team1806.robot.commands.IntakeCommands.IntakeStop;
+import org.usfirst.frc.team1806.robot.commands.canSequenceCommands.CanPickupSequence;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.AutoStack;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.DropSequence;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.ExtendArms;
@@ -79,18 +81,20 @@ public class OI {
 			}else{
 				new IntakeStop().start();
 			}
+		}else{
+			new IntakeStop().start();
 		}
 		
 
 		
 		if(robotModeLatch.update(operatorController.getRawButton(6))){
-			if(Robot.statesObj.getRobotMode() == States.robotMode.AUTOSTACK){
+			if(Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK){
 				Robot.lift.disable();
-				Robot.statesObj.setRobotModeManual();
+				Robot.statesObj.robotModeTracker = States.robotMode.MANUAL;
 				System.out.println("now in manual mode");
 			}else{
 					new LiftReset();
-					Robot.statesObj.setRobotModeAutoStack();
+					Robot.statesObj.robotModeTracker = States.robotMode.AUTOSTACK;
 					System.out.println("now in auto mode");
 				
 			}
@@ -100,9 +104,9 @@ public class OI {
 		 * AUTOSTACK COMMANDS!
 		 */
 		
-		if(Robot.statesObj.getRobotMode() == States.robotMode.AUTOSTACK){
+		if(Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK){
 			
-			if(Robot.statesObj.getLiftPosition() == States.liftPosition.HOLDING_STATE){
+			if(Robot.statesObj.liftPositionTracker == States.liftPosition.HOLDING_STATE){
 				if(operatorController.getRawButton(1)){
 					Robot.statesObj.elevatorCommandTracker = States.elevatorCommand.MOVETONEXT;
 			}else if(operatorController.getRawButton(4)){
@@ -110,7 +114,7 @@ public class OI {
 				}
 			}
 			//this comparitor is long af so fix it maybe
-			if(Robot.statesObj.getLiftPosition() == States.liftPosition.HOLDING_STATE && Robot.statesObj.getExtendState() == States.extendState.ARMS_EXTENDED){
+			if(Robot.statesObj.liftPositionTracker == States.liftPosition.HOLDING_STATE && Robot.statesObj.extendStateTracker == States.extendState.ARMS_EXTENDED){
 				operatorButtonLB.whenPressed(new DropSequence());
 			}
 		}
@@ -121,7 +125,7 @@ public class OI {
 		 * MANUAL COMMANDS!
 		 */
 		
-		if(Robot.statesObj.getRobotMode() == States.robotMode.MANUAL){
+		if(Robot.statesObj.robotModeTracker == States.robotMode.MANUAL){
 			
 
 			
@@ -146,6 +150,23 @@ public class OI {
 				Robot.lift.manualMove(manualLiftPower);
 			}else{
 				Robot.lift.stop();
+			}
+		}
+		
+		/*
+		 * CAN SEQUENCE COMMANDS!
+		 */
+		
+		//if you're pressing A, AND you're in autostack, AND you're zeroed... start autostack sequence
+		if(driverController.getRawButton(1) && Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK && Robot.statesObj.liftPositionTracker == States.liftPosition.ZEROED){
+			Robot.statesObj.liftPositionTracker = States.liftPosition.OTHER;
+			new CanPickupSequence().start();
+		}
+		
+		if(Robot.statesObj.liftPositionTracker == States.liftPosition.OTHER){
+			if(driverController.getRawButton(1) && Robot.lift.getLiftEncoder() > 75){
+				//prevents double pressing at the start
+				Robot.statesObj.canSequenceStateTracker = States.canSequenceState.MOVETONEXT;
 			}
 		}
 		

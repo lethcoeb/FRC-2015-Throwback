@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.omg.PortableServer.LIFESPAN_POLICY_ID;
+import org.usfirst.frc.team1806.robot.commands.canSequenceCommands.PlaceCanOnTote;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.AutoStack;
 import org.usfirst.frc.team1806.robot.subsystems.Elevator;
 import org.usfirst.frc.team1806.robot.subsystems.Intake;
@@ -114,13 +115,16 @@ public class Robot extends IterativeRobot {
         
         dt.arcadeDrive(dc.getLeftJoyY(), -dc.getRightJoyX());
         oi.update();
-        if(autoStack.update((lift.getOpticalSensor() || oc.getRawButton(7)) && statesObj.getAutoStackPos() == States.autoStackPosition.WAITING)){
+        if(autoStack.update(((lift.getOpticalSensor() && statesObj.liftPositionTracker == States.liftPosition.ZEROED) || oc.getRawButton(7)) && statesObj.liftPositionTracker == States.liftPosition.ZEROED) && (statesObj.canSequenceStateTracker == States.canSequenceState.WAITING)){
         	new AutoStack().start();
+        }else if(Robot.statesObj.canSequenceStateTracker == States.canSequenceState.STACKHEIGHT && lift.getOpticalSensor()){
+        	new PlaceCanOnTote().start();
         }
         writeToDashboard();
         
-        d.writeData(String.valueOf(Robot.lift.getLiftEncoder()), String.valueOf(t.get()), String.valueOf(lift.getLiftPowerPercentage()));
-        
+        if(statesObj.dataLogStateTracker == States.dataLogState.ON){
+        	d.writeData(String.valueOf(Robot.lift.getLiftEncoder()), String.valueOf(t.get()), String.valueOf(lift.getLiftPowerPercentage()));
+        }
         
         
         
@@ -132,10 +136,13 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putBoolean("Optical Sensor",lift.getOpticalSensor());
         SmartDashboard.putBoolean("Top Limit",lift.getTopLimit());
         SmartDashboard.putBoolean("Bottom Limit",lift.getBottomLimit());
-        SmartDashboard.putString("2StageState", Robot.statesObj.getSecondStageState().toString());
-        SmartDashboard.putString("Lift State", Robot.statesObj.getLiftState().toString());
-        SmartDashboard.putString("Clamp State", Robot.statesObj.getClampState().toString());
-        SmartDashboard.putString("Extend State", Robot.statesObj.getExtendState().toString());
+        
+        SmartDashboard.putString("LiftPosition", statesObj.liftPositionTracker.toString());
+        SmartDashboard.putString("RobotMode", statesObj.robotModeTracker.toString());
+        SmartDashboard.putString("ElevatorCommand", statesObj.elevatorCommandTracker.toString());
+        SmartDashboard.putString("autoStackPosition", statesObj.autoStackPositionTracker.toString());
+        SmartDashboard.putString("canSequenceState", statesObj.canSequenceStateTracker.toString());
+
     }
     
     /**

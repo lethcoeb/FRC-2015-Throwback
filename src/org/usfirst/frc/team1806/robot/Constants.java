@@ -17,7 +17,12 @@ public class Constants {
 	public static double holdingPosition = 150;
 	public static double secondStageHeight = 675;
 	public static double secondStagePIDEngage = 525;
+	public static double highCanHoldHeight = 1600;
+	public static double stackingCanHoldHeight = 1000;
+	public static double canReleaseHeight = 700;
 	
 	public static double acceptableHeightRange = 10;
+	
+	
 	
 }

@@ -12,8 +12,10 @@ public class DropSequence extends CommandGroup {
     
     public  DropSequence() {
     	
+    	//MAKE SURE TO SET LIFT POSITION STATE TO ZEROED AFTER DROP
+    	
     	//if arms extended, drop on platform and release
-    	if(Robot.statesObj.getExtendState() == States.extendState.ARMS_EXTENDED){
+    	if(Robot.statesObj.extendStateTracker == States.extendState.ARMS_EXTENDED){
     		//need to  add code to drop stack on platform
     		addSequential(new OpenArms());
     	}

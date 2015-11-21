@@ -57,8 +57,11 @@ public class logData {
             System.out.println(
                 "failed to write to file '"
                 + fileName + "'");
-            // Or we could just do this:
-            // ex.printStackTrace();
+            
+            
+            //to prevent spam
+            //will disallow any more running of the data logger
+            Robot.statesObj.dataLogStateTracker = States.dataLogState.OFF;
         }	
 	}
 	
@@ -68,37 +71,26 @@ public class logData {
         	
        	 FileWriter fileWriter = new FileWriter(fileName, true);
        	 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-       		
-
-       		
-       	
-           // Assume default encoding.
-
-
-           // Always wrap FileWriter in BufferedWriter.
-
-
-           // Note that write() does not automatically
-           // append a newline character.
            
-           //bufferedWriter.newLine();
-           
-           bufferedWriter.write("\r\n" + "New Teleop Cycle Started" + "\r\n");
-           bufferedWriter.write("P: " + Constants.P + "," + "I: " + Constants.I + "," 
+         bufferedWriter.write("\r\n" + "New Teleop Cycle Started" + "\r\n");
+         bufferedWriter.write("P: " + Constants.P + "," + "I: " + Constants.I + "," 
         		   + "D: " + Constants.D + "\r\n");
-           bufferedWriter.write(Constants.secondStagePIDEngage + " = PID Engage Height" + "," 
+         bufferedWriter.write(Constants.secondStagePIDEngage + " = PID Engage Height" + "," 
         		   + Constants.secondStageHeight + " = PID Target Height" + "\r\n" + "\r\n");
-           bufferedWriter.write("Height,Time,Power" + "\r\n");
+         bufferedWriter.write("Height,Time,Power" + "\r\n");
 
            // Always close files.
-           bufferedWriter.close();
+         bufferedWriter.close();
        }
        catch(IOException ex) {
            System.out.println(
                "failed to write to file '"
                + fileName + "'");
-           // Or we could just do this:
-           // ex.printStackTrace();
+
+           //to prevent spam
+           //will disallow any more running of the data logger
+           Robot.statesObj.dataLogStateTracker = States.dataLogState.OFF;
+           
        }	
 		
 	}
