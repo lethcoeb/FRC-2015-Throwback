@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.command.Command;
 public class Wait extends Command {
 
 	Timer t;
-	private long m_seconds;
+	private double m_seconds;
 	
-    public Wait(long seconds) {
+    public Wait(double seconds) {
     	m_seconds = seconds;
 
     }
@@ -28,15 +28,17 @@ public class Wait extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (t.get() == m_seconds);
+        return (t.get() >= m_seconds);
     }
 
     // Called once after isFinished returns true
     protected void end() {
+    	t.stop();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	t.stop();
     }
 }

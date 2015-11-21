@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1806.robot.commands.elevatorCommands;
 
 import org.usfirst.frc.team1806.robot.Robot;
+import org.usfirst.frc.team1806.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.command.Command;
@@ -28,7 +29,7 @@ public class MoveToTarget extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Math.abs(Robot.lift.getSetpoint() - Robot.lift.getLiftEncoder()) < 10);
+        return Robot.lift.isWithinRange(m_targetPos);
     }
 
     // Called once after isFinished returns true

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1806.robot.subsystems;
 
+import org.usfirst.frc.team1806.robot.Constants;
 import org.usfirst.frc.team1806.robot.OI;
 import org.usfirst.frc.team1806.robot.Robot;
 import org.usfirst.frc.team1806.robot.RobotMap;
@@ -74,6 +75,10 @@ public class Elevator extends PIDSubsystem {
 		}
 	}
 	
+	public boolean isWithinRange(double Setpoint){
+		return !(Math.abs(Robot.lift.getSetpoint() - Robot.lift.getLiftEncoder()) > Constants.acceptableHeightRange);
+	}
+	
 	//constructor
 	public Elevator(double P, double I, double D){
 		super(P, I, D);
@@ -138,6 +143,11 @@ public class Elevator extends PIDSubsystem {
 		Robot.statesObj.setLiftStateStopped();
 	}
 	
+	public void zeroPower(){
+		elevatorMotorTalon.set(0);
+		Robot.statesObj.setLiftStateStopped();
+	}
+	
 	public void openArms(){
 		armsPinch.set(DoubleSolenoid.Value.kForward);
 		Robot.statesObj.setClampStateOpen();
@@ -159,12 +169,12 @@ public class Elevator extends PIDSubsystem {
 	}
 	
 	public void secondStageHold(){
-		secondStage.set(DoubleSolenoid.Value.kReverse);
+		secondStage.set(DoubleSolenoid.Value.kForward);
 		Robot.statesObj.setSecondStageStateHolding();
 	}
 	
 	public void secondStageRelease(){
-		secondStage.set(DoubleSolenoid.Value.kForward);
+		secondStage.set(DoubleSolenoid.Value.kReverse);
 		Robot.statesObj.setSecondStageStateReleased();
 	}
 	

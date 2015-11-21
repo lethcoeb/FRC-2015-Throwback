@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 import edu.wpi.first.wpilibj.command.Command;
@@ -15,11 +16,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.omg.PortableServer.LIFESPAN_POLICY_ID;
-import org.usfirst.frc.team1806.robot.commands.HoldTote;
-import org.usfirst.frc.team1806.robot.commands.LiftDown;
-import org.usfirst.frc.team1806.robot.commands.StateMachine;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.AutoStack;
 import org.usfirst.frc.team1806.robot.subsystems.Elevator;
+import org.usfirst.frc.team1806.robot.subsystems.Intake;
 
 
 /**
@@ -38,15 +37,22 @@ public class Robot extends IterativeRobot {
 	public static final XboxController dc = new XboxController(RobotMap.driverController);
 	public static final XboxController oc = new XboxController(RobotMap.operatorController);
 	private static final RobotDrive dt = new RobotDrive(RobotMap.leftDriveMotor, RobotMap.rightDriveMotor);
-	public static final Elevator lift = new Elevator(0.003 , 0.0001, 0.0);
+	public static final Elevator lift = new Elevator(Constants.P , Constants.I, Constants.D);
+	public static final Intake in = new Intake();
+	
+	
+	//MAKE SURE TO TAKE OUT!!!
+	//VERY INTENSIVE. I THINK.
+	public logData d = new logData();
+	Timer t = new Timer();
 
     Command autonomousCommand;
     Command StateMachine;
     public static States statesObj = new States();
     
-    //variables!!!!!!!!!!!!!!
-    
-    //drive
+
+    Latch autoStack = new Latch();
+    Latch creepMode = new Latch();
 
     
     Compressor c = new Compressor(0);
@@ -80,18 +86,15 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to 
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
-        //new StateMachine().start();
-
-        //COMPRESSOR CODE HERE!
         c.setClosedLoopControl(true);
         
         System.out.println("teleop initialized fam");
         
+        d.writeNewTeleopCycle();
+        
+        //Remove when not logging
+        t.start();
                 
 
     }
@@ -111,11 +114,12 @@ public class Robot extends IterativeRobot {
         
         dt.arcadeDrive(dc.getLeftJoyY(), -dc.getRightJoyX());
         oi.update();
-        //add listener class? (For optical sensor, limit switches, etc.
-        if(lift.getOpticalSensor() && statesObj.getAutoStackPos() == States.autoStackPosition.WAITING){
+        if(autoStack.update((lift.getOpticalSensor() || oc.getRawButton(7)) && statesObj.getAutoStackPos() == States.autoStackPosition.WAITING)){
         	new AutoStack().start();
         }
         writeToDashboard();
+        
+        d.writeData(String.valueOf(Robot.lift.getLiftEncoder()), String.valueOf(t.get()), String.valueOf(lift.getLiftPowerPercentage()));
         
         
         

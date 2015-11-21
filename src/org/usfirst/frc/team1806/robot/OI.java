@@ -7,17 +7,16 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.omg.CORBA.PRIVATE_MEMBER;
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.usfirst.frc.team1806.robot.States;
-import org.usfirst.frc.team1806.robot.commands.ArmsControl;
-import org.usfirst.frc.team1806.robot.commands.DropSequence;
-import org.usfirst.frc.team1806.robot.commands.HoldTote;
-import org.usfirst.frc.team1806.robot.commands.LiftDown;
-import org.usfirst.frc.team1806.robot.commands.LiftReset;
-import org.usfirst.frc.team1806.robot.commands.LiftUp;
-import org.usfirst.frc.team1806.robot.commands.OpACommand;
+import org.usfirst.frc.team1806.robot.commands.IntakeCommands.IntakeRun;
+import org.usfirst.frc.team1806.robot.commands.IntakeCommands.IntakeStop;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.AutoStack;
+import org.usfirst.frc.team1806.robot.commands.elevatorCommands.DropSequence;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.ExtendArms;
+import org.usfirst.frc.team1806.robot.commands.elevatorCommands.LiftReset;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.ManualMove;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.MoveToTarget;
+import org.usfirst.frc.team1806.robot.commands.elevatorCommands.MoveToZero;
+import org.usfirst.frc.team1806.robot.commands.elevatorCommands.OpACommand;
 
 import edu.wpi.first.wpilibj.buttons.Trigger;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -37,6 +36,8 @@ public class OI {
 	private CommandGroup manualGroup = new CommandGroup();
 	
 	private double manualLiftPower;
+	private double LTrigger;
+	private double RTrigger;
 	
 	JoystickButton driverButtonA = new JoystickButton(driverController, 1);
 	JoystickButton driverButtonB = new JoystickButton(driverController, 2);
@@ -50,29 +51,48 @@ public class OI {
 	JoystickButton operatorButtonY = new JoystickButton(operatorController, 4);
 	JoystickButton operatorButtonLB = new JoystickButton(operatorController, 5);
 	JoystickButton operatorButtonRB = new JoystickButton(operatorController, 6);
+
 	
 	public OI(){
 		
 		//buttons that are always listened for
 		driverButtonRB.whenPressed(new LiftReset());
 		operatorButtonLB.whenPressed(new DropSequence());
+		
+		
+		
 	}
 	
 	public void update(){
 
 		//functions independent of auto/manual
+		LTrigger = driverController.getRawAxis(2);
+		RTrigger = driverController.getRawAxis(3);
 		
+
 		
+		if(Robot.statesObj.liftPositionTracker != States.liftPosition.HOLDING_STATE){
+			if(LTrigger > 0){
+				new IntakeRun(LTrigger).start();
+			}else if(RTrigger > 0){
+				new IntakeRun(-RTrigger).start();
+			}else{
+				new IntakeStop().start();
+			}
+		}
 		
 
 		
 		if(robotModeLatch.update(operatorController.getRawButton(6))){
 			if(Robot.statesObj.getRobotMode() == States.robotMode.AUTOSTACK){
+				Robot.lift.disable();
 				Robot.statesObj.setRobotModeManual();
 				System.out.println("now in manual mode");
 			}else{
-				Robot.statesObj.setRobotModeAutoStack();
-				System.out.println("now in auto mode");
+					new LiftReset();
+					Robot.statesObj.setRobotModeAutoStack();
+					System.out.println("now in auto mode");
+				
 			}
 		}
 		
@@ -81,9 +101,13 @@ public class OI {
 		 */
 		
 		if(Robot.statesObj.getRobotMode() == States.robotMode.AUTOSTACK){
-			operatorButtonA.whenPressed(new OpACommand());
+			
 			if(Robot.statesObj.getLiftPosition() == States.liftPosition.HOLDING_STATE){
-				operatorButtonY.whenPressed(new ExtendArms());
+				if(operatorController.getRawButton(1)){
+					Robot.statesObj.elevatorCommandTracker = States.elevatorCommand.MOVETONEXT;
+			}else if(operatorController.getRawButton(4)){
+					new ExtendArms();
+				}
 			}
 			//this comparitor is long af so fix it maybe
 			if(Robot.statesObj.getLiftPosition() == States.liftPosition.HOLDING_STATE && Robot.statesObj.getExtendState() == States.extendState.ARMS_EXTENDED){
