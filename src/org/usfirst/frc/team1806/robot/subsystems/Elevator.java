@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1806.robot.subsystems;
 
 import org.usfirst.frc.team1806.robot.Constants;
-import org.usfirst.frc.team1806.robot.OI;
 import org.usfirst.frc.team1806.robot.Robot;
 import org.usfirst.frc.team1806.robot.RobotMap;
 import org.usfirst.frc.team1806.robot.States;
@@ -11,14 +10,10 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
-import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- *
- */
 public class Elevator extends PIDSubsystem {
     
+	//initialize motors and sensors and solenoids OH MY!
 	Talon elevatorMotorTalon = new Talon(RobotMap.elevatorMotor);
 	DoubleSolenoid secondStage = new DoubleSolenoid(RobotMap.secondStageHold, RobotMap.secondStageRelease);
 	DoubleSolenoid armsExtend = new DoubleSolenoid(RobotMap.extendIn, RobotMap.extendOut);
@@ -29,25 +24,16 @@ public class Elevator extends PIDSubsystem {
 	DigitalInput topLimit = new DigitalInput(RobotMap.topSensor);
 	DigitalInput opticalSensor = new DigitalInput(RobotMap.photoSensor);
 	
-	//public States statesObj = new States();
-
-
 	
-	
-	
-	//public String getLocalOccurences(){
-	//	return local_Occurrences.toString();
-	//}
-	
-	
-	//getters
-	
+	/*
+	 * Getters
+	 */
 	
 	public double getLiftEncoder(){
 		return liftEncoder.get();
 	}
 	
-	//limit switches are reversed - the ! is to reverse them to be right lol
+		//Limit switches & optical sensor are reversed so we switch them to get them to output an accurate value
 	public boolean getBottomLimit(){
 		return !bottomLimit.get();
 	}
@@ -66,8 +52,7 @@ public class Elevator extends PIDSubsystem {
 	
 	public boolean isSafe(double liftPower){
 		
-		//if youre at the top and sending power up, it's unsafe. vice versa
-		//limit switches are reversed because the sensors are backwards
+		//If you're at the top and sending power up (or vice versa), it's unsafe.
 		if((!topLimit.get() && liftPower > 0)  || (!bottomLimit.get() && liftPower < 0)){
 			return false;
 		}else{
@@ -79,16 +64,22 @@ public class Elevator extends PIDSubsystem {
 		return !(Math.abs(target - Robot.lift.getLiftEncoder()) > Constants.acceptableHeightRange);
 	}
 	
+	
 	//constructor
 	public Elevator(double P, double I, double D){
 		super(P, I, D);
 		getPIDController().setContinuous(false);
-		setAbsoluteTolerance(30);
+		setAbsoluteTolerance(Constants.acceptableHeightRange);
 	}
+	
+	
+	/*
+	 * Motor and Solenoid manipulation
+	 */
 	
 	public void manualMove(double speed){
 		
-		
+		//Don't allow movement if you're trying to move the lift past its hardstops
 		if((!bottomLimit.get() && speed < 0)  ||  (!topLimit.get() && speed > 0)){
 			System.out.println("no can do cracker jack");
 		}else{
@@ -96,7 +87,7 @@ public class Elevator extends PIDSubsystem {
 			elevatorMotorTalon.set(speed);
 		}
 	}
-	//make it do shit
+	
 	public void moveUp(){
 		brakeOff();
 		if(topLimit.get()){
@@ -107,10 +98,6 @@ public class Elevator extends PIDSubsystem {
 		}
 		
 	}
-	
-	/*public void moveUpToPos(double targetPosition){
-		elevatorMotorTalon.pidWrite();
-	}*/
 
 	public void moveDown(){
 		if(bottomLimit.get()){
@@ -120,7 +107,6 @@ public class Elevator extends PIDSubsystem {
 		else{
 			System.out.println("Invalid - elevator too low");
 		}
-		
 	}
 	
 	public void moveDownSlow(){
@@ -132,6 +118,16 @@ public class Elevator extends PIDSubsystem {
 			System.out.println("invalid - elevator too low");
 		}
 		
+	}
+	
+	public void moveDownMedium(){
+		if(bottomLimit.get()){
+			brakeOff();
+			elevatorMotorTalon.set(-.5);
+		}
+		else{
+			System.out.println("invalid - elevator too low");
+		}
 	}
 	
 	public void stop(){
@@ -197,28 +193,39 @@ public class Elevator extends PIDSubsystem {
 	public void resetEncoder(){
 		liftEncoder.reset();
 	}
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
-
-	//setters for conditions
-
 	
     public void initDefaultCommand() {
 
-    	
-    	
     }
 
+    /*
+     * PID Stuff
+     * 
+     * To use PID: use the .SetSetpoint method in commands
+     */
+    
 	@Override
 	protected double returnPIDInput() {
+		//The sensor that the pid uses to calculate error
 		return liftEncoder.get();
 	}
 
 	@Override
 	protected void usePIDOutput(double output) {
-		// TODO Auto-generated method stub
+		//What is controlled by the PID output
 		brakeOff();
-		elevatorMotorTalon.set(output);
+		if(Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK){
+			if(Robot.statesObj.totesHeld == 0){
+				elevatorMotorTalon.set( output* .6);
+			}else if(Robot.statesObj.totesHeld == 1){
+				elevatorMotorTalon.set( output* .98);
+
+			}
+		
+			else{
+				elevatorMotorTalon.set(output);
+			}
+		}
 	}
 }
 

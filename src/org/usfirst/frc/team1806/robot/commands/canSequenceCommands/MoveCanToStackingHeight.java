@@ -11,24 +11,36 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class MoveCanToStackingHeight extends Command {
 
+	private boolean movingDown;
+	
     public MoveCanToStackingHeight() {
         requires(Robot.lift);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	
-    	Robot.lift.enable();
-    	Robot.lift.setSetpoint(Constants.stackingCanHoldHeight);
+    	//you need to move down
+    	if(Robot.lift.getLiftEncoder() > Constants.stackingCanHoldHeight){
+    		Robot.lift.moveDown();
+    		movingDown = true;
+    	}else{
+    		Robot.lift.moveUp();
+    		movingDown = false;
+    	}
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.lift.isWithinRange(Constants.stackingCanHoldHeight);
+        if(movingDown){
+        	return (Robot.lift.getLiftEncoder() < Constants.stackingCanHoldHeight);
+        }else{
+        	return (Robot.lift.getLiftEncoder() > Constants.stackingCanHoldHeight);
+        }
     }
 
     // Called once after isFinished returns true

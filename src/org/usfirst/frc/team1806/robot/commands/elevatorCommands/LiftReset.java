@@ -22,6 +22,7 @@ public class LiftReset extends Command {
     	if(!Robot.lift.getBottomLimit()){
     		Robot.lift.moveDownSlow();
     	}
+    	Robot.lift.secondStageRelease();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -35,12 +36,13 @@ public class LiftReset extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.lift.stop();
     	Robot.lift.openArms();
+    	Robot.lift.stop();
     	Robot.lift.retractArms();
     	Robot.lift.resetEncoder();
-    	Robot.lift.secondStageRelease();
+
     	Robot.statesObj.reset();
+    	System.out.println("now in auto mode");
     }
 
     // Called when another command which requires one or more of the same

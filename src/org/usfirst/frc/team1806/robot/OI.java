@@ -19,6 +19,7 @@ import org.usfirst.frc.team1806.robot.commands.elevatorCommands.ManualMove;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.MoveToTarget;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.MoveToZero;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.OpACommand;
+import org.usfirst.frc.team1806.robot.commands.elevatorCommands.OpenArms;
 
 import edu.wpi.first.wpilibj.buttons.Trigger;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -58,7 +59,7 @@ public class OI {
 	public OI(){
 		
 		//buttons that are always listened for
-		driverButtonRB.whenPressed(new LiftReset());
+		//driverButtonRB.whenPressed(new LiftReset());
 		operatorButtonLB.whenPressed(new DropSequence());
 		
 		operatorButtonX.whenPressed(new MoveToTarget(1000));
@@ -74,6 +75,9 @@ public class OI {
 		RTrigger = driverController.getRawAxis(3);
 		
 
+		/*
+		 * INTAKE COMMANDS! 
+		 */
 		
 		if(Robot.statesObj.liftPositionTracker != States.liftPosition.HOLDING_STATE){
 			if(LTrigger > 0){
@@ -95,12 +99,13 @@ public class OI {
 				Robot.statesObj.robotModeTracker = States.robotMode.MANUAL;
 				System.out.println("now in manual mode");
 			}else{
-					new LiftReset();
+					new LiftReset().start();
 					Robot.statesObj.robotModeTracker = States.robotMode.AUTOSTACK;
 					System.out.println("now in auto mode");
 				
 			}
 		}
+		
 		
 		/*
 		 * AUTOSTACK COMMANDS!
@@ -115,13 +120,25 @@ public class OI {
 					new ExtendArms();
 				}
 			}
-			//this comparitor is long af so fix it maybe
+			
+			//V long comparitor :(
 			if(Robot.statesObj.liftPositionTracker == States.liftPosition.HOLDING_STATE && Robot.statesObj.extendStateTracker == States.extendState.ARMS_EXTENDED){
 				operatorButtonLB.whenPressed(new DropSequence());
 			}
 		}
 		
+		/*
+		 * RESET
+		 */
 		
+		if(driverController.getRawButton(6)){
+			if(Robot.lift.getBottomLimit()){
+				new OpenArms().start();
+				Robot.statesObj.reset();
+			}else{
+				new LiftReset().start();
+			}
+		}
 		
 		/*
 		 * MANUAL COMMANDS!
@@ -155,11 +172,12 @@ public class OI {
 			}
 		}
 		
+		
 		/*
 		 * CAN SEQUENCE COMMANDS!
 		 */
 		
-		//if you're pressing A, AND you're in autostack, AND you're zeroed... start can sequence sequence
+		//if you're pressing A, AND you're in autostack, AND you're zeroed... start can sequence
 		if(driverController.getRawButton(1) && Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK && Robot.statesObj.liftPositionTracker == States.liftPosition.ZEROED){
 			Robot.statesObj.robotModeTracker = States.robotMode.CANSEQUENCE;
 			Robot.statesObj.liftPositionTracker = States.liftPosition.OTHER;
@@ -168,11 +186,12 @@ public class OI {
 		
 		if(Robot.statesObj.liftPositionTracker == States.liftPosition.OTHER){
 			if(driverController.getRawButton(1) && Robot.lift.getLiftEncoder() > 75){
-				//prevents double pressing at the start
+				//Prevents double pressing at the start of the sequence.
 				Robot.statesObj.canSequenceStateTracker = States.canSequenceState.MOVETONEXT;
 			}
 		}
 		
+		//NEED TO ADD DROPSEQUENCE
 		/*if(operatorController.getRawAxis(2) > .5){
 			new DropSequence();
 		}*/

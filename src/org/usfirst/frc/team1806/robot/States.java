@@ -41,6 +41,8 @@ public class States {
 	public enum canSequenceState{
 		WAITING, MOVETONEXT, STACKHEIGHT
 	}
+	
+	public int totesHeld;
 	//Occurrences local_Occurrences = Occurrences.ELEVATOR_STOP;
 	
 	public secondStageState secondStageStateTracker;
@@ -65,6 +67,7 @@ public class States {
 		autoStackPositionTracker = autoStackPosition.WAITING;
 		dataLogStateTracker = dataLogState.ON;
 		canSequenceStateTracker = canSequenceState.WAITING;
+		totesHeld = 0;
 	}
 	
 

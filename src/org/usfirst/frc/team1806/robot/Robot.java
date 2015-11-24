@@ -144,11 +144,15 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putBoolean("Top Limit",lift.getTopLimit());
         SmartDashboard.putBoolean("Bottom Limit",lift.getBottomLimit());
         
+        SmartDashboard.putNumber("Totes held", Robot.statesObj.totesHeld);
+        
         SmartDashboard.putString("LiftPosition", statesObj.liftPositionTracker.toString());
         SmartDashboard.putString("RobotMode", statesObj.robotModeTracker.toString());
         SmartDashboard.putString("ElevatorCommand", statesObj.elevatorCommandTracker.toString());
         SmartDashboard.putString("autoStackPosition", statesObj.autoStackPositionTracker.toString());
         SmartDashboard.putString("canSequenceState", statesObj.canSequenceStateTracker.toString());
+        
+        SmartDashboard.putData(Scheduler.getInstance());
 
     }
     

@@ -26,7 +26,7 @@ public class AutoStack extends CommandGroup {
     	addSequential(new MoveToSecondStage());
     	
     	//this is needed!!! it was taken out for testing
-    	//addSequential(new SecondStageHold());
+    	addSequential(new SecondStageHold());
     	addSequential(new Wait(.25));
     	addSequential(new OpenArms());
     	addSequential(new MoveToZero());

@@ -36,6 +36,9 @@ public class MoveToZero extends Command {
     	Robot.lift.disable();
     	Robot.lift.stop();
     	Robot.statesObj.liftPositionTracker = States.liftPosition.ZEROED;
+    	if(Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK){
+    		Robot.statesObj.totesHeld++;
+    	}
     }
 
     // Called when another command which requires one or more of the same
