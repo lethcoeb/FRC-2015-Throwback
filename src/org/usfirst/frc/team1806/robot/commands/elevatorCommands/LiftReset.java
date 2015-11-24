@@ -19,7 +19,9 @@ public class LiftReset extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.moveDownSlow();
+    	if(!Robot.lift.getBottomLimit()){
+    		Robot.lift.moveDownSlow();
+    	}
     }
 
     // Called repeatedly when this Command is scheduled to run

@@ -61,6 +61,8 @@ public class OI {
 		driverButtonRB.whenPressed(new LiftReset());
 		operatorButtonLB.whenPressed(new DropSequence());
 		
+		operatorButtonX.whenPressed(new MoveToTarget(1000));
+		operatorButtonY.whenPressed(new MoveToTarget(0));
 		
 		
 	}
@@ -157,8 +159,9 @@ public class OI {
 		 * CAN SEQUENCE COMMANDS!
 		 */
 		
-		//if you're pressing A, AND you're in autostack, AND you're zeroed... start autostack sequence
+		//if you're pressing A, AND you're in autostack, AND you're zeroed... start can sequence sequence
 		if(driverController.getRawButton(1) && Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK && Robot.statesObj.liftPositionTracker == States.liftPosition.ZEROED){
+			Robot.statesObj.robotModeTracker = States.robotMode.CANSEQUENCE;
 			Robot.statesObj.liftPositionTracker = States.liftPosition.OTHER;
 			new CanPickupSequence().start();
 		}

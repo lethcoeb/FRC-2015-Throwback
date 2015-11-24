@@ -12,10 +12,12 @@ import edu.wpi.first.wpilibj.buttons.Trigger;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.omg.PortableServer.LIFESPAN_POLICY_ID;
+import org.usfirst.frc.team1806.robot.States.dataLogState;
 import org.usfirst.frc.team1806.robot.commands.canSequenceCommands.PlaceCanOnTote;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.AutoStack;
 import org.usfirst.frc.team1806.robot.subsystems.Elevator;
@@ -58,6 +60,9 @@ public class Robot extends IterativeRobot {
     
     Compressor c = new Compressor(0);
     
+    SendableChooser sc = new SendableChooser();
+    boolean dataLoggingState = false;
+    
     
     
     /**
@@ -67,6 +72,9 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	//new StateMachine().start();
     	oi = new OI();
+    	sc.addDefault("Logging = Off", statesObj.dataLogStateTracker = States.dataLogState.OFF);
+    	sc.addObject("Logging = On", statesObj.dataLogStateTracker = States.dataLogState.ON);
+    	SmartDashboard.putData("Datalogging", sc);
 
     }
 	
@@ -92,7 +100,10 @@ public class Robot extends IterativeRobot {
         
         System.out.println("teleop initialized fam");
         
-        d.writeNewTeleopCycle();
+        //only runs new teleop cycle method if datalogState is on when teleop is initialized
+        if(statesObj.dataLogStateTracker == States.dataLogState.ON){
+        	d.writeNewTeleopCycle();
+        }
         
         //Remove when not logging
         t.start();
@@ -117,7 +128,7 @@ public class Robot extends IterativeRobot {
         oi.update();
         if(autoStack.update(((lift.getOpticalSensor() && statesObj.liftPositionTracker == States.liftPosition.ZEROED) || oc.getRawButton(7)) && statesObj.liftPositionTracker == States.liftPosition.ZEROED) && (statesObj.canSequenceStateTracker == States.canSequenceState.WAITING)){
         	new AutoStack().start();
-        }else if(Robot.statesObj.canSequenceStateTracker == States.canSequenceState.STACKHEIGHT && lift.getOpticalSensor()){
+        }else if((Robot.statesObj.canSequenceStateTracker == States.canSequenceState.STACKHEIGHT || Robot.statesObj.canSequenceStateTracker == States.canSequenceState.MOVETONEXT) && lift.getOpticalSensor()){
         	new PlaceCanOnTote().start();
         }
         writeToDashboard();

@@ -15,8 +15,8 @@ public class PlaceCanOnTote extends CommandGroup {
         
     	
     	addParallel(new MoveToTarget(0));
-    	addParallel(new AbleToOpenArms());
-    	//addSequential(new ResetStates());
+    	addSequential(new AbleToOpenArms());
+    	addSequential(new ResetStates());
     	
     	
     }

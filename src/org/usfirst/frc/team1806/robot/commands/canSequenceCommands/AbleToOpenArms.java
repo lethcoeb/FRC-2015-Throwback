@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class AbleToOpenArms extends Command {
 
     public AbleToOpenArms() {
-        requires(Robot.lift);
+        //requires(Robot.lift);
     }
 
     // Called just before this Command runs the first time

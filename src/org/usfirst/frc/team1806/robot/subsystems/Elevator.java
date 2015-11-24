@@ -75,8 +75,8 @@ public class Elevator extends PIDSubsystem {
 		}
 	}
 	
-	public boolean isWithinRange(double Setpoint){
-		return !(Math.abs(Robot.lift.getSetpoint() - Robot.lift.getLiftEncoder()) > Constants.acceptableHeightRange);
+	public boolean isWithinRange(double target){
+		return !(Math.abs(target - Robot.lift.getLiftEncoder()) > Constants.acceptableHeightRange);
 	}
 	
 	//constructor
@@ -145,34 +145,43 @@ public class Elevator extends PIDSubsystem {
 	
 	public void openArms(){
 		armsPinch.set(DoubleSolenoid.Value.kForward);
+		Robot.statesObj.clampStateTracker = States.clampState.ARMS_OPEN;
 	}
 	
 	public void closeArms(){
 		armsPinch.set(DoubleSolenoid.Value.kReverse);
+		Robot.statesObj.clampStateTracker = States.clampState.ARMS_CLAMPED;
 	}
 	
 	public void extendArms(){
 		armsExtend.set(DoubleSolenoid.Value.kReverse);
+		Robot.statesObj.extendStateTracker = States.extendState.ARMS_EXTENDED;
 	}
 	
 	public void retractArms(){
 		armsExtend.set(DoubleSolenoid.Value.kForward);
+		Robot.statesObj.extendStateTracker = States.extendState.ARMS_RETRACTED;
 	}
 	
 	public void secondStageHold(){
 		secondStage.set(DoubleSolenoid.Value.kForward);
+		Robot.statesObj.secondStageStateTracker = States.secondStageState.SECOND_STAGE_HOLDING;
 	}
 	
 	public void secondStageRelease(){
 		secondStage.set(DoubleSolenoid.Value.kReverse);
+		Robot.statesObj.secondStageStateTracker = States.secondStageState.SECOND_STAGE_RELEASED;
 	}
 	
 	public void secondStageFlip(){
 		if (secondStage.get() == DoubleSolenoid.Value.kReverse) {
 			secondStage.set(DoubleSolenoid.Value.kForward);
+			Robot.statesObj.secondStageStateTracker = States.secondStageState.SECOND_STAGE_HOLDING;
+
 		}
 		else{
 			secondStage.set(DoubleSolenoid.Value.kReverse);
+			Robot.statesObj.secondStageStateTracker = States.secondStageState.SECOND_STAGE_RELEASED;
 		}
 	}
 	
