@@ -44,13 +44,10 @@ public class Robot extends IterativeRobot {
 	public static final Intake in = new Intake();
 	
 	
-	//MAKE SURE TO TAKE OUT!!!
-	//VERY INTENSIVE. I THINK.
 	public logData d = new logData();
 	Timer t = new Timer();
 
     Command autonomousCommand;
-    Command StateMachine;
     public static States statesObj = new States();
     
 
@@ -70,7 +67,6 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-    	//new StateMachine().start();
     	oi = new OI();
     	sc.addDefault("Logging = Off", statesObj.dataLogStateTracker = States.dataLogState.OFF);
     	sc.addObject("Logging = On", statesObj.dataLogStateTracker = States.dataLogState.ON);
