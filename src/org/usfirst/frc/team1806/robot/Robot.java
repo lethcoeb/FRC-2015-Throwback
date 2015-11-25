@@ -123,6 +123,7 @@ public class Robot extends IterativeRobot {
         dt.arcadeDrive(dc.getLeftJoyY(), -dc.getRightJoyX());
         oi.update();
         if(autoStack.update(((lift.getOpticalSensor() && statesObj.liftPositionTracker == States.liftPosition.ZEROED) || oc.getRawButton(7)) && statesObj.liftPositionTracker == States.liftPosition.ZEROED) && (statesObj.canSequenceStateTracker == States.canSequenceState.WAITING)){
+        	
         	new AutoStack().start();
         }else if((Robot.statesObj.canSequenceStateTracker == States.canSequenceState.STACKHEIGHT || Robot.statesObj.canSequenceStateTracker == States.canSequenceState.MOVETONEXT) && lift.getOpticalSensor()){
         	new PlaceCanOnTote().start();

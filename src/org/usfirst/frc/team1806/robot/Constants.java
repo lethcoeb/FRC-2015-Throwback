@@ -17,7 +17,7 @@ public class Constants {
 	
 	//location constants
 	public static double holdingPosition = 150;
-	public static double secondStageHeight = 680;
+	public static double secondStageHeight = 650;
 	public static double secondStagePIDEngage = 525;
 	public static double highCanHoldHeight = 2000;
 	public static double stackingCanHoldHeight = 1300;

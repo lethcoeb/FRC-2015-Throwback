@@ -28,11 +28,19 @@ public class MoveToSecondStage extends Command {
     protected void execute() {
     	
     	//engage PID when you're close
+    	
+    	
     	    if(Robot.lift.getLiftEncoder() > Constants.secondStagePIDEngage && !pidControl){
+    	    	if(Robot.statesObj.totesHeld == 0){
+    	    		Robot.lift.enable();
+    	    		Robot.lift.setSetpoint(Constants.secondStageHeight);
+    	    	}else{
     	    	
     	    		Robot.lift.enable();
     	    		Robot.lift.setSetpoint(Constants.secondStageHeight);
     	    		pidControl = true;
+    	    		
+    	    	}
     	    		
     	    	
             
@@ -47,7 +55,7 @@ public class MoveToSecondStage extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-
+    	Robot.lift.disable();
     }
 
     // Called when another command which requires one or more of the same

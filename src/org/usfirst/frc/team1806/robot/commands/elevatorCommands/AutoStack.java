@@ -18,15 +18,11 @@ public class AutoStack extends CommandGroup {
 
     	addSequential(new CloseArms());
     	addSequential(new Wait(.25));
-    	//need to change 150 to a constant
     	addSequential(new MoveFastToHolding());
-    	//addSequential(new MoveFastToY(150));
     	addSequential(new waitForOpButton());
     	addSequential(new SecondStageRelease());
     	addSequential(new MoveToSecondStage());
-    	
-    	//this is needed!!! it was taken out for testing
-    	addSequential(new SecondStageHold());
+       	addSequential(new SecondStageHold());
     	addSequential(new Wait(.25));
     	addSequential(new OpenArms());
     	addSequential(new MoveToZero());

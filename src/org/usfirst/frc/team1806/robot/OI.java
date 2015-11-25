@@ -133,8 +133,8 @@ public class OI {
 		
 		if(driverController.getRawButton(6)){
 			if(Robot.lift.getBottomLimit()){
-				new OpenArms().start();
-				Robot.statesObj.reset();
+				new LiftReset().start();
+				Robot.lift.openArms();
 			}else{
 				new LiftReset().start();
 			}
