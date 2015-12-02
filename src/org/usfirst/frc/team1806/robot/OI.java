@@ -1,28 +1,17 @@
 package org.usfirst.frc.team1806.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-import org.omg.CORBA.PRIVATE_MEMBER;
-import org.omg.CORBA.PUBLIC_MEMBER;
 import org.usfirst.frc.team1806.robot.States;
-import org.usfirst.frc.team1806.robot.States.robotMode;
+import org.usfirst.frc.team1806.robot.commands.DrivetrainCommands.Turn90;
 import org.usfirst.frc.team1806.robot.commands.IntakeCommands.IntakeRun;
 import org.usfirst.frc.team1806.robot.commands.IntakeCommands.IntakeStop;
 import org.usfirst.frc.team1806.robot.commands.canSequenceCommands.CanPickupSequence;
-import org.usfirst.frc.team1806.robot.commands.elevatorCommands.AutoStack;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.DropSequence;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.ExtendArms;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.LiftReset;
-import org.usfirst.frc.team1806.robot.commands.elevatorCommands.ManualMove;
-import org.usfirst.frc.team1806.robot.commands.elevatorCommands.MoveToTarget;
-import org.usfirst.frc.team1806.robot.commands.elevatorCommands.MoveToZero;
-import org.usfirst.frc.team1806.robot.commands.elevatorCommands.OpACommand;
-import org.usfirst.frc.team1806.robot.commands.elevatorCommands.OpenArms;
 
-import edu.wpi.first.wpilibj.buttons.Trigger;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -36,7 +25,6 @@ public class OI {
 	private Latch armsClampLatch = new Latch();
 	private Latch armsExtendLatch = new Latch();
 	private Latch robotModeLatch = new Latch();
-	private CommandGroup manualGroup = new CommandGroup();
 	
 	private double manualLiftPower;
 	private double LTrigger;
@@ -54,17 +42,15 @@ public class OI {
 	JoystickButton operatorButtonY = new JoystickButton(operatorController, 4);
 	JoystickButton operatorButtonLB = new JoystickButton(operatorController, 5);
 	JoystickButton operatorButtonRB = new JoystickButton(operatorController, 6);
+	JoystickButton operatorButtonRS = new JoystickButton(operatorController, 10);
 
 	
 	public OI(){
 		
 		//buttons that are always listened for
-		//driverButtonRB.whenPressed(new LiftReset());
-		operatorButtonLB.whenPressed(new DropSequence());
+		//basically the dumbest thing ever
 		
-		operatorButtonX.whenPressed(new MoveToTarget(1000));
-		operatorButtonY.whenPressed(new MoveToTarget(0));
-		
+		operatorButtonRS.whenPressed(new Turn90(Robot.drivetrain.navx.getAngle() + 90));
 		
 	}
 	
@@ -79,7 +65,7 @@ public class OI {
 		 * INTAKE COMMANDS! 
 		 */
 		
-		if(Robot.statesObj.liftPositionTracker != States.liftPosition.HOLDING_STATE){
+		if(Robot.statesObj.driverIntakeControlTracker == States.driverIntakeControl.DRIVER && Robot.statesObj.liftPositionTracker != States.liftPosition.HOLDING_STATE){
 			if(LTrigger > 0){
 				new IntakeRun(LTrigger).start();
 			}else if(RTrigger > 0){
@@ -87,11 +73,12 @@ public class OI {
 			}else{
 				new IntakeStop().start();
 			}
-		}else{
-			new IntakeStop().start();
 		}
 		
 
+		/*
+		 * MANUAL COMMANDS!
+		 */
 		
 		if(robotModeLatch.update(operatorController.getRawButton(6))){
 			if(Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK){
@@ -113,15 +100,15 @@ public class OI {
 		
 		if(Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK){
 			
-			if(Robot.statesObj.liftPositionTracker == States.liftPosition.HOLDING_STATE){
-				if(operatorController.getRawButton(1)){
-					Robot.statesObj.elevatorCommandTracker = States.elevatorCommand.MOVETONEXT;
-			}else if(operatorController.getRawButton(4)){
-					new ExtendArms();
-				}
+			if(Robot.statesObj.liftPositionTracker == States.liftPosition.HOLDING_STATE && (operatorController.getRawButton(1) || driverController.getRawButton(6))){
+				Robot.statesObj.elevatorCommandTracker = States.elevatorCommand.MOVETONEXT;
+			}else if(operatorController.getRawButton(4) && Robot.statesObj.liftPositionTracker == States.liftPosition.HOLDING_STATE){
+					Robot.statesObj.driverIntakeControlTracker = States.driverIntakeControl.AUTOMATIC;
+					new ExtendArms().start();
+					new IntakeRun(-.25).start();
 			}
 			
-			//V long comparitor :(
+			//Very long comparator :-(
 			if(Robot.statesObj.liftPositionTracker == States.liftPosition.HOLDING_STATE && Robot.statesObj.extendStateTracker == States.extendState.ARMS_EXTENDED){
 				operatorButtonLB.whenPressed(new DropSequence());
 			}
@@ -131,7 +118,7 @@ public class OI {
 		 * RESET
 		 */
 		
-		if(driverController.getRawButton(6)){
+		if(driverController.getRawButton(5)){
 			if(Robot.lift.getBottomLimit()){
 				new LiftReset().start();
 				Robot.lift.openArms();
@@ -192,9 +179,11 @@ public class OI {
 		}
 		
 		//NEED TO ADD DROPSEQUENCE
-		/*if(operatorController.getRawAxis(2) > .5){
-			new DropSequence();
-		}*/
+
+		
+		if(operatorController.getRawButton(5)){
+			new DropSequence().start();
+		}
 	}
 }
 	

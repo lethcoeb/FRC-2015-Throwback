@@ -1,27 +1,31 @@
 
 package org.usfirst.frc.team1806.robot;
 
+
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.buttons.Trigger;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-import org.omg.PortableServer.LIFESPAN_POLICY_ID;
-import org.usfirst.frc.team1806.robot.States.dataLogState;
 import org.usfirst.frc.team1806.robot.commands.canSequenceCommands.PlaceCanOnTote;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.AutoStack;
+import org.usfirst.frc.team1806.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1806.robot.subsystems.Elevator;
 import org.usfirst.frc.team1806.robot.subsystems.Intake;
+
+import com.kauailabs.navx.frc.AHRS;
+
+
+
+
+
 
 
 /**
@@ -33,14 +37,16 @@ import org.usfirst.frc.team1806.robot.subsystems.Intake;
  */
 public class Robot extends IterativeRobot {
 
-
 	public static OI oi;
 	
 	
 	public static final XboxController dc = new XboxController(RobotMap.driverController);
 	public static final XboxController oc = new XboxController(RobotMap.operatorController);
+	
+	
 	private static final RobotDrive dt = new RobotDrive(RobotMap.leftDriveMotor, RobotMap.rightDriveMotor);
-	public static final Elevator lift = new Elevator(Constants.P , Constants.I, Constants.D);
+	public static Drivetrain drivetrain;
+	public static final Elevator lift = new Elevator(Constants.elevatorP , Constants.elevatorI, Constants.elevatorD);
 	public static final Intake in = new Intake();
 	
 	
@@ -54,12 +60,9 @@ public class Robot extends IterativeRobot {
     Latch autoStack = new Latch();
     Latch creepMode = new Latch();
 
+    Compressor compressor = new Compressor(0);
     
-    Compressor c = new Compressor(0);
-    
-    SendableChooser sc = new SendableChooser();
-    boolean dataLoggingState = false;
-    
+    SendableChooser sc = new SendableChooser();    
     
     
     /**
@@ -67,10 +70,15 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+    	
+    	
+    	
     	oi = new OI();
-    	sc.addDefault("Logging = Off", statesObj.dataLogStateTracker = States.dataLogState.OFF);
+    	sc.addObject("Logging = Off", statesObj.dataLogStateTracker = States.dataLogState.OFF);
     	sc.addObject("Logging = On", statesObj.dataLogStateTracker = States.dataLogState.ON);
     	SmartDashboard.putData("Datalogging", sc);
+    	
+    	drivetrain = new Drivetrain();
 
     }
 	
@@ -92,19 +100,17 @@ public class Robot extends IterativeRobot {
 
     public void teleopInit() {
         if (autonomousCommand != null) autonomousCommand.cancel();
-        c.setClosedLoopControl(true);
+        compressor.setClosedLoopControl(true);
         
         System.out.println("teleop initialized fam");
         
         //only runs new teleop cycle method if datalogState is on when teleop is initialized
+        //datalog on/off is a radiobutton set on the java dashboard.
         if(statesObj.dataLogStateTracker == States.dataLogState.ON){
         	d.writeNewTeleopCycle();
+        	System.out.println("Datalogging initiated!");
+        	t.start();
         }
-        
-        //Remove when not logging
-        t.start();
-                
-
     }
 
     /**
@@ -112,7 +118,8 @@ public class Robot extends IterativeRobot {
      * You can use it to reset subsystems before shutting down.
      */
     public void disabledInit(){
-
+    	lift.zeroPower();
+    	System.out.println("Robot disabled!");
     }
 
     
@@ -134,6 +141,7 @@ public class Robot extends IterativeRobot {
         	d.writeData(String.valueOf(Robot.lift.getLiftEncoder()), String.valueOf(t.get()), String.valueOf(lift.getLiftPowerPercentage()));
         }
         
+        System.out.println(Robot.drivetrain.navx.getAngle());
         
         
     }

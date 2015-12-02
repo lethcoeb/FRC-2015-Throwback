@@ -64,6 +64,10 @@ public class Elevator extends PIDSubsystem {
 		return !(Math.abs(target - Robot.lift.getLiftEncoder()) > Constants.acceptableHeightRange);
 	}
 	
+	public boolean isWithinTightRange(double target){
+		return !(Math.abs(target - Robot.lift.getLiftEncoder()) > Constants.acceptableTightHeightRange);
+	}
+	
 	
 	//constructor
 	public Elevator(double P, double I, double D){
@@ -216,7 +220,7 @@ public class Elevator extends PIDSubsystem {
 		brakeOff();
 		if(Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK){
 			if(Robot.statesObj.totesHeld == 0){
-				elevatorMotorTalon.set( output* .6);
+				elevatorMotorTalon.set( output* .8);
 			}else if(Robot.statesObj.totesHeld == 1){
 				elevatorMotorTalon.set( output* .98);
 

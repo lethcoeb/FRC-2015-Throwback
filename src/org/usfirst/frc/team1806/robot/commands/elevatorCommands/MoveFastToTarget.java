@@ -7,18 +7,25 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class MoveFastToY extends Command {
+public class MoveFastToTarget extends Command {
 
 	private double m_target;
+	private boolean movingUp;
 	
-    public MoveFastToY(double target) {
+    public MoveFastToTarget(double target) {
         requires(Robot.lift);
         m_target = target;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.moveUp();
+    	if(Robot.lift.getLiftEncoder() > m_target){
+    		Robot.lift.moveDown();
+    		movingUp = false;
+    	}else{
+    		Robot.lift.moveUp();
+    		movingUp = true;
+    	}
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -28,7 +35,11 @@ public class MoveFastToY extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Robot.lift.getLiftEncoder() > m_target);
+    	if(movingUp){
+    		return Robot.lift.getLiftEncoder() > m_target;
+    	}else{
+    		return Robot.lift.getLiftEncoder() < m_target;
+    	}
     }
 
     // Called once after isFinished returns true

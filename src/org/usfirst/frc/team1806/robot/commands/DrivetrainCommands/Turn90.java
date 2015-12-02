@@ -1,26 +1,23 @@
-package org.usfirst.frc.team1806.robot.commands.elevatorCommands;
+package org.usfirst.frc.team1806.robot.commands.DrivetrainCommands;
 
-import org.usfirst.frc.team1806.robot.Constants;
 import org.usfirst.frc.team1806.robot.Robot;
-import org.usfirst.frc.team1806.robot.States;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class MoveToHolding extends Command {
+public class Turn90 extends Command {
 
-    public MoveToHolding() {
-    	
-    	requires(Robot.lift);
-    	
+	private double m_targetAngle;
+	
+    public Turn90(double targetAngle) {
+        requires(Robot.drivetrain);
+        m_targetAngle = targetAngle;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.enable();
-    	Robot.lift.setSetpoint(Constants.holdingPosition);
+    	Robot.drivetrain.setAngle(m_targetAngle);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -29,19 +26,15 @@ public class MoveToHolding extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	return Robot.lift.isWithinRange(Constants.holdingPosition);
+        return false;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.statesObj.liftPositionTracker = States.liftPosition.HOLDING_STATE;
-    	Robot.lift.stop();
-    	Robot.lift.disable();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	Robot.lift.disable();
     }
 }

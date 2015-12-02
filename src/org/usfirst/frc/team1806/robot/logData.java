@@ -73,8 +73,8 @@ public class logData {
        	 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
            
          bufferedWriter.write("\r\n" + "New Teleop Cycle Started" + "\r\n");
-         bufferedWriter.write("P: " + Constants.P + "," + "I: " + Constants.I + "," 
-        		   + "D: " + Constants.D + "\r\n");
+         bufferedWriter.write("P: " + Constants.elevatorP + "," + "I: " + Constants.elevatorI + "," 
+        		   + "D: " + Constants.elevatorD + "\r\n");
          bufferedWriter.write(Constants.secondStagePIDEngage + " = PID Engage Height" + "," 
         		   + Constants.secondStageHeight + " = PID Target Height" + "\r\n" + "\r\n");
          bufferedWriter.write("Height,Time,Power" + "\r\n");

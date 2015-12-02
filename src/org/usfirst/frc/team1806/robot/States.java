@@ -42,8 +42,12 @@ public class States {
 		WAITING, MOVETONEXT, STACKHEIGHT
 	}
 	
+	public enum driverIntakeControl{
+		DRIVER, AUTOMATIC
+	}
+	
 	public int totesHeld;
-	//Occurrences local_Occurrences = Occurrences.ELEVATOR_STOP;
+	
 	
 	public secondStageState secondStageStateTracker;
 	public liftState liftStateTracker;
@@ -55,6 +59,7 @@ public class States {
 	public autoStackPosition autoStackPositionTracker;
 	public dataLogState dataLogStateTracker;
 	public canSequenceState canSequenceStateTracker;
+	public driverIntakeControl driverIntakeControlTracker;
 	
 	public void reset(){
 		secondStageStateTracker = secondStageState.SECOND_STAGE_RELEASED;
@@ -65,9 +70,10 @@ public class States {
 		robotModeTracker = robotMode.AUTOSTACK;
 		elevatorCommandTracker = elevatorCommand.WAITING;
 		autoStackPositionTracker = autoStackPosition.WAITING;
-		dataLogStateTracker = dataLogState.ON;
+		dataLogStateTracker = dataLogState.OFF;
 		canSequenceStateTracker = canSequenceState.WAITING;
 		totesHeld = 0;
+		driverIntakeControlTracker = driverIntakeControl.DRIVER;
 	}
 	
 
