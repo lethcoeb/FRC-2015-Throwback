@@ -33,6 +33,8 @@ public class Robot extends IterativeRobot {
 	public static Elevator lift;
 	public static Intake in;
 	
+	//test commit message for slack
+	
 	
 	
 	public logData d = new logData();
@@ -116,7 +118,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         
-        //dtSS.arcadeDrive(dc.getLeftJoyY(), dc.getRightJoyX());
+        dtSS.arcadeDrive(dc.getLeftJoyY(), dc.getRightJoyX());
         
         oi.update();
         if(autoStack.update(((lift.getOpticalSensor() && statesObj.liftPositionTracker == States.liftPosition.ZEROED) || oc.getRawButton(7)) && statesObj.liftPositionTracker == States.liftPosition.ZEROED) && (statesObj.canSequenceStateTracker == States.canSequenceState.WAITING)){
