@@ -16,7 +16,7 @@ public class waitForOpButton extends Command {
 	private boolean cont;
 	
     public waitForOpButton() {
-        requires(Robot.lift);
+        requires(Robot.elevatorSS);
     }
 
     // Called just before this Command runs the first time
@@ -43,6 +43,6 @@ public class waitForOpButton extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	Robot.lift.zeroPower();
+    	Robot.elevatorSS.zeroPower();
     }
 }

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team1806.robot.commands.autonomous.PickupCanAndDriveBackwards;
 import org.usfirst.frc.team1806.robot.commands.canSequenceCommands.PlaceCanOnTote;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.AutoStack;
 import org.usfirst.frc.team1806.robot.subsystems.DrivetrainSS;
@@ -29,9 +30,9 @@ public class Robot extends IterativeRobot {
 	public static final XboxController dc = new XboxController(RobotMap.driverController);
 	public static final XboxController oc = new XboxController(RobotMap.operatorController);
 	
-	public static DrivetrainSS dtSS;
-	public static Elevator lift;
-	public static Intake in;
+	public static DrivetrainSS drivetrainSS;
+	public static Elevator elevatorSS;
+	public static Intake intakeSS;
 	
 	//test commit message for slack
 	
@@ -58,9 +59,9 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     	
-    	dtSS = new DrivetrainSS();
-    	lift = new Elevator(Constants.elevatorP , Constants.elevatorI, Constants.elevatorD);
-    	in = new Intake();
+    	drivetrainSS = new DrivetrainSS();
+    	elevatorSS = new Elevator(Constants.elevatorP , Constants.elevatorI, Constants.elevatorD);
+    	intakeSS = new Intake();
     	
     	
     	    	
@@ -78,7 +79,7 @@ public class Robot extends IterativeRobot {
 	}
 
     public void autonomousInit() {
-        // schedule the autonomous command (example)
+        autonomousCommand = new PickupCanAndDriveBackwards();
         if (autonomousCommand != null) autonomousCommand.start();
     }
 
@@ -109,28 +110,28 @@ public class Robot extends IterativeRobot {
      * You can use it to reset subsystems before shutting down.
      */
     public void disabledInit(){
-    	lift.zeroPower();
+    	elevatorSS.zeroPower();
     	System.out.println("Robot disabled!");
     }
 
     
    
     public void teleopPeriodic() {
-        Scheduler.getInstance().run();
+    	Scheduler.getInstance().run();
         
-        dtSS.arcadeDrive(dc.getLeftJoyY(), dc.getRightJoyX());
+        drivetrainSS.arcadeDrive(dc.getLeftJoyY(), dc.getRightJoyX());
         
         oi.update();
-        if(autoStack.update(((lift.getOpticalSensor() && statesObj.liftPositionTracker == States.liftPosition.ZEROED) || oc.getRawButton(7)) && statesObj.liftPositionTracker == States.liftPosition.ZEROED) && (statesObj.canSequenceStateTracker == States.canSequenceState.WAITING)){
+        if(autoStack.update(((elevatorSS.getOpticalSensor() && statesObj.liftPositionTracker == States.liftPosition.ZEROED) || oc.getRawButton(7)) && statesObj.liftPositionTracker == States.liftPosition.ZEROED) && (statesObj.canSequenceStateTracker == States.canSequenceState.WAITING)){
         	
         	new AutoStack().start();
-        }else if((Robot.statesObj.canSequenceStateTracker == States.canSequenceState.STACKHEIGHT || Robot.statesObj.canSequenceStateTracker == States.canSequenceState.MOVETONEXT) && lift.getOpticalSensor()){
+        }else if((Robot.statesObj.canSequenceStateTracker == States.canSequenceState.STACKHEIGHT || Robot.statesObj.canSequenceStateTracker == States.canSequenceState.MOVETONEXT) && elevatorSS.getOpticalSensor()){
         	new PlaceCanOnTote().start();
         }
         writeToDashboard();
         
         if(statesObj.dataLogStateTracker == States.dataLogState.ON){
-        	d.writeData(String.valueOf(Robot.lift.getLiftEncoder()), String.valueOf(t.get()), String.valueOf(lift.getLiftPowerPercentage()));
+        	d.writeData(String.valueOf(Robot.elevatorSS.getLiftEncoder()), String.valueOf(t.get()), String.valueOf(elevatorSS.getLiftPowerPercentage()));
         }
         
         
@@ -138,11 +139,11 @@ public class Robot extends IterativeRobot {
     }
     
     public void writeToDashboard(){
-    	SmartDashboard.putNumber("Lift Encoder Value", lift.getLiftEncoder());
-        SmartDashboard.putNumber("Lift Power",lift.getLiftPowerPercentage());
-        SmartDashboard.putBoolean("Optical Sensor",lift.getOpticalSensor());
-        SmartDashboard.putBoolean("Top Limit",lift.getTopLimit());
-        SmartDashboard.putBoolean("Bottom Limit",lift.getBottomLimit());
+    	SmartDashboard.putNumber("Lift Encoder Value", elevatorSS.getLiftEncoder());
+        SmartDashboard.putNumber("Lift Power",elevatorSS.getLiftPowerPercentage());
+        SmartDashboard.putBoolean("Optical Sensor",elevatorSS.getOpticalSensor());
+        SmartDashboard.putBoolean("Top Limit",elevatorSS.getTopLimit());
+        SmartDashboard.putBoolean("Bottom Limit",elevatorSS.getBottomLimit());
         
         SmartDashboard.putNumber("Totes held", Robot.statesObj.totesHeld);
         

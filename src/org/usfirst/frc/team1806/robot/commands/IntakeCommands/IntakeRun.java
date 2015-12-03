@@ -12,13 +12,13 @@ public class IntakeRun extends Command {
 	private double m_speed;
 	
     public IntakeRun(double speed) {
-        requires(Robot.in);
+        requires(Robot.intakeSS);
         m_speed = speed;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.in.runAtSpeed(m_speed);
+    	Robot.intakeSS.runAtSpeed(m_speed);
     }
 
     // Called repeatedly when this Command is scheduled to run

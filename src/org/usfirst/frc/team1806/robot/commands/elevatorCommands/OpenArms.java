@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.command.Command;
 public class OpenArms extends Command {
 
     public OpenArms() {
-        requires(Robot.lift);
+        requires(Robot.elevatorSS);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.openArms();
+    	Robot.elevatorSS.openArms();
     }
 
     // Called repeatedly when this Command is scheduled to run

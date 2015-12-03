@@ -13,17 +13,17 @@ public class MoveFastToTarget extends Command {
 	private boolean movingUp;
 	
     public MoveFastToTarget(double target) {
-        requires(Robot.lift);
+        requires(Robot.elevatorSS);
         m_target = target;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	if(Robot.lift.getLiftEncoder() > m_target){
-    		Robot.lift.moveDown();
+    	if(Robot.elevatorSS.getLiftEncoder() > m_target){
+    		Robot.elevatorSS.moveDown();
     		movingUp = false;
     	}else{
-    		Robot.lift.moveUp();
+    		Robot.elevatorSS.moveUp();
     		movingUp = true;
     	}
     }
@@ -36,20 +36,20 @@ public class MoveFastToTarget extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
     	if(movingUp){
-    		return Robot.lift.getLiftEncoder() > m_target;
+    		return Robot.elevatorSS.getLiftEncoder() > m_target;
     	}else{
-    		return Robot.lift.getLiftEncoder() < m_target;
+    		return Robot.elevatorSS.getLiftEncoder() < m_target;
     	}
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.lift.stop();
+    	Robot.elevatorSS.stop();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	Robot.lift.zeroPower();
+    	Robot.elevatorSS.zeroPower();
     }
 }

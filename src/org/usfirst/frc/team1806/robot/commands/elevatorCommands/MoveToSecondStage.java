@@ -14,13 +14,13 @@ public class MoveToSecondStage extends Command {
 	private boolean pidControl = false;
 	
     public MoveToSecondStage() {
-        requires(Robot.lift);
+        requires(Robot.elevatorSS);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	
-    	Robot.lift.moveUp();
+    	Robot.elevatorSS.moveUp();
 	
     }
 
@@ -30,14 +30,14 @@ public class MoveToSecondStage extends Command {
     	//engage PID when you're close
     	
     	
-    	    if(Robot.lift.getLiftEncoder() > Constants.secondStagePIDEngage && !pidControl){
+    	    if(Robot.elevatorSS.getLiftEncoder() > Constants.secondStagePIDEngage && !pidControl){
     	    	if(Robot.statesObj.totesHeld == 0){
-    	    		Robot.lift.enable();
-    	    		Robot.lift.setSetpoint(Constants.secondStageHeight);
+    	    		Robot.elevatorSS.enable();
+    	    		Robot.elevatorSS.setSetpoint(Constants.secondStageHeight);
     	    	}else{
     	    	
-    	    		Robot.lift.enable();
-    	    		Robot.lift.setSetpoint(Constants.secondStageHeight);
+    	    		Robot.elevatorSS.enable();
+    	    		Robot.elevatorSS.setSetpoint(Constants.secondStageHeight);
     	    		pidControl = true;
     	    		
     	    	}
@@ -50,17 +50,17 @@ public class MoveToSecondStage extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
     	
-        return Robot.lift.isWithinRange(Constants.secondStageHeight);
+        return Robot.elevatorSS.isWithinRange(Constants.secondStageHeight);
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.lift.disable();
+    	Robot.elevatorSS.disable();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	Robot.lift.disable();
+    	Robot.elevatorSS.disable();
     }
 }

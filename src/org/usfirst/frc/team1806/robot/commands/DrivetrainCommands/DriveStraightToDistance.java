@@ -4,7 +4,7 @@ import org.usfirst.frc.team1806.robot.Constants;
 import org.usfirst.frc.team1806.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
-import static org.usfirst.frc.team1806.robot.Robot.dtSS;
+import static org.usfirst.frc.team1806.robot.Robot.drivetrainSS;
 
 /**
  *
@@ -12,19 +12,20 @@ import static org.usfirst.frc.team1806.robot.Robot.dtSS;
 public class DriveStraightToDistance extends PIDCommand {
 
 	private double m_distance;
+	private final double P = .04;
 	
     public DriveStraightToDistance(double distance) {
     	
         super(Constants.drivetrainDriveP, Constants.drivetrainDriveI, Constants.drivetrainDriveD);
-    	requires(dtSS);
+    	requires(drivetrainSS);
     	m_distance = distance;
     	
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	dtSS.resetAngle();
-    	dtSS.resetEncoders();
+    	drivetrainSS.resetAngle();
+    	drivetrainSS.resetEncoders();
     	
     	getPIDController().setContinuous(false);
         getPIDController().setAbsoluteTolerance(Constants.drivetrainDistanceTolerance);
@@ -44,7 +45,7 @@ public class DriveStraightToDistance extends PIDCommand {
 
     // Called once after isFinished returns true
     protected void end() {
-    	dtSS.arcadeDrive(0, 0);
+    	drivetrainSS.arcadeDrive(0, 0);
     }
 
     // Called when another command which requires one or more of the same
@@ -55,13 +56,13 @@ public class DriveStraightToDistance extends PIDCommand {
 	@Override
 	protected double returnPIDInput() {
 		// TODO Auto-generated method stub
-		return dtSS.getLeftInches();
+		return drivetrainSS.getLeftInches();
 	}
 
 	@Override
 	protected void usePIDOutput(double output) {
 		
-		dtSS.arcadeDrive(-output, 0);
+		drivetrainSS.arcadeDrive(-output, P * -drivetrainSS.getAngle());
 		
 	}
 }

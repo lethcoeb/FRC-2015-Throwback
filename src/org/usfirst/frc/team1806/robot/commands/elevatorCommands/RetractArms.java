@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.command.Command;
 public class RetractArms extends Command {
 
     public RetractArms() {
-        requires(Robot.lift);
+        requires(Robot.elevatorSS);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.retractArms();
+    	Robot.elevatorSS.retractArms();
     }
 
     // Called repeatedly when this Command is scheduled to run

@@ -14,15 +14,16 @@ public class LiftReset extends Command {
     public LiftReset() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.lift);
+    	requires(Robot.elevatorSS);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	if(!Robot.lift.getBottomLimit()){
-    		Robot.lift.moveDownSlow();
+    	Robot.elevatorSS.secondStageRelease();
+    	Robot.elevatorSS.openArms();
+    	if(!Robot.elevatorSS.getBottomLimit()){
+    		Robot.elevatorSS.moveDownSlow();
     	}
-    	Robot.lift.secondStageRelease();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -31,15 +32,15 @@ public class LiftReset extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.lift.getBottomLimit();
+        return Robot.elevatorSS.getBottomLimit();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.lift.openArms();
-    	Robot.lift.stop();
-    	Robot.lift.retractArms();
-    	Robot.lift.resetEncoder();
+    	Robot.elevatorSS.openArms();
+    	Robot.elevatorSS.stop();
+    	Robot.elevatorSS.retractArms();
+    	Robot.elevatorSS.resetEncoder();
 
     	Robot.statesObj.reset();
     	System.out.println("now in auto mode");

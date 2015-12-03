@@ -12,12 +12,12 @@ import edu.wpi.first.wpilibj.command.Command;
 public class MoveFastToHolding extends Command {
 
     public MoveFastToHolding() {
-        requires(Robot.lift);
+        requires(Robot.elevatorSS);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.moveUp();
+    	Robot.elevatorSS.moveUp();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -26,18 +26,18 @@ public class MoveFastToHolding extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Robot.lift.getLiftEncoder() > Constants.holdingPosition);
+        return (Robot.elevatorSS.getLiftEncoder() > Constants.holdingPosition);
     }
 
     // Called once after isFinished returns true
     protected void end() {
     	Robot.statesObj.liftPositionTracker = States.liftPosition.HOLDING_STATE;
-    	Robot.lift.stop();
+    	Robot.elevatorSS.stop();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	Robot.lift.zeroPower();
+    	Robot.elevatorSS.zeroPower();
     }
 }

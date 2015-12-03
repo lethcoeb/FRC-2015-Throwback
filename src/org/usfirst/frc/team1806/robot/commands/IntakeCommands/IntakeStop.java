@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.command.Command;
 public class IntakeStop extends Command {
 
     public IntakeStop() {
-        requires(Robot.in);
+        requires(Robot.intakeSS);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.in.stop();
+    	Robot.intakeSS.stop();
     }
 
     // Called repeatedly when this Command is scheduled to run

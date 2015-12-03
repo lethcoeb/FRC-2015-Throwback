@@ -12,12 +12,12 @@ public class SecondStageHold extends Command {
     public SecondStageHold() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.lift);
+    	requires(Robot.elevatorSS);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.secondStageHold();
+    	Robot.elevatorSS.secondStageHold();
     }
 
     // Called repeatedly when this Command is scheduled to run

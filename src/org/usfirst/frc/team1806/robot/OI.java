@@ -84,7 +84,7 @@ public class OI {
 		
 		if(robotModeLatch.update(operatorController.getRawButton(6))){
 			if(Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK){
-				Robot.lift.disable();
+				Robot.elevatorSS.disable();
 				Robot.statesObj.robotModeTracker = States.robotMode.MANUAL;
 				System.out.println("now in manual mode");
 			}else{
@@ -121,9 +121,9 @@ public class OI {
 		 */
 		
 		if(driverController.getRawButton(5)){
-			if(Robot.lift.getBottomLimit()){
+			if(Robot.elevatorSS.getBottomLimit()){
 				new LiftReset().start();
-				Robot.lift.openArms();
+				Robot.elevatorSS.openArms();
 			}else{
 				new LiftReset().start();
 			}
@@ -142,22 +142,22 @@ public class OI {
 			
 			if(armsClampLatch.update(operatorController.getRawButton(4))){
 				if(Robot.statesObj.extendStateTracker == States.extendState.ARMS_EXTENDED){
-					Robot.lift.retractArms();
+					Robot.elevatorSS.retractArms();
 				}else{
-					Robot.lift.extendArms();
+					Robot.elevatorSS.extendArms();
 				}
 				
 			}if(armsExtendLatch.update(operatorController.getRawButton(3))){
 				if(Robot.statesObj.clampStateTracker == States.clampState.ARMS_CLAMPED){
-					Robot.lift.openArms();
+					Robot.elevatorSS.openArms();
 				}else{
-					Robot.lift.closeArms();
+					Robot.elevatorSS.closeArms();
 				}
 				
-			}if(Math.abs(manualLiftPower) > Constants.operatorLS_Y_Deadzone && Robot.lift.isSafe(manualLiftPower)){
-				Robot.lift.manualMove(manualLiftPower);
+			}if(Math.abs(manualLiftPower) > Constants.operatorLS_Y_Deadzone && Robot.elevatorSS.isSafe(manualLiftPower)){
+				Robot.elevatorSS.manualMove(manualLiftPower);
 			}else{
-				Robot.lift.stop();
+				Robot.elevatorSS.stop();
 			}
 		}
 		
@@ -174,7 +174,7 @@ public class OI {
 		}
 		
 		if(Robot.statesObj.liftPositionTracker == States.liftPosition.OTHER){
-			if(driverController.getRawButton(1) && Robot.lift.getLiftEncoder() > 75){
+			if(driverController.getRawButton(1) && Robot.elevatorSS.getLiftEncoder() > 75){
 				//Prevents double pressing at the start of the sequence.
 				Robot.statesObj.canSequenceStateTracker = States.canSequenceState.MOVETONEXT;
 			}

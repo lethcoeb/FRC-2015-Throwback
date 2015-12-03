@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class ResetAfterCanPlacement extends Command {
 
     public ResetAfterCanPlacement() {
-        requires(Robot.lift);
+        requires(Robot.elevatorSS);
     }
 
     // Called just before this Command runs the first time

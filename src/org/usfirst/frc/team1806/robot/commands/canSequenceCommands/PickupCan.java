@@ -12,20 +12,20 @@ import edu.wpi.first.wpilibj.command.Command;
 public class PickupCan extends Command {
 	
     public PickupCan() {
-        requires(Robot.lift);
+        requires(Robot.elevatorSS);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.closeArms();
-    	Robot.lift.moveUp();
+    	Robot.elevatorSS.closeArms();
+    	Robot.elevatorSS.moveUp();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	
-    	if(Robot.lift.getLiftEncoder() > Constants.highCanHoldHeight){
-    		Robot.lift.stop();
+    	if(Robot.elevatorSS.getLiftEncoder() > Constants.highCanHoldHeight){
+    		Robot.elevatorSS.stop();
     	}
     	
     }
@@ -38,13 +38,13 @@ public class PickupCan extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	
-    	Robot.lift.zeroPower();
+    	Robot.elevatorSS.zeroPower();
     	
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	Robot.lift.zeroPower();
+    	Robot.elevatorSS.zeroPower();
     }
 }

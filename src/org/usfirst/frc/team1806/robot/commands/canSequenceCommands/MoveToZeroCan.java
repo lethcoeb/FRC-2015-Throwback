@@ -14,12 +14,12 @@ public class MoveToZeroCan extends Command {
 	private boolean canReleased = false;
 	
     public MoveToZeroCan() {
-        requires(Robot.lift);
+        requires(Robot.elevatorSS);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.moveDown();
+    	Robot.elevatorSS.moveDown();
     	
     }
 
@@ -27,8 +27,8 @@ public class MoveToZeroCan extends Command {
     protected void execute() {
     	
     	if(!canReleased){
-    		if (Robot.lift.getLiftEncoder() < Constants.canReleaseHeight){
-    			Robot.lift.openArms();
+    		if (Robot.elevatorSS.getLiftEncoder() < Constants.canReleaseHeight){
+    			Robot.elevatorSS.openArms();
     			canReleased = true;
     		}
     	}
@@ -37,7 +37,7 @@ public class MoveToZeroCan extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.lift.getBottomLimit();
+        return Robot.elevatorSS.getBottomLimit();
     }
 
     // Called once after isFinished returns true

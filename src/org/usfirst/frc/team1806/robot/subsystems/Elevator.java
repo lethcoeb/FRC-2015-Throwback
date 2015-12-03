@@ -61,11 +61,11 @@ public class Elevator extends PIDSubsystem {
 	}
 	
 	public boolean isWithinRange(double target){
-		return !(Math.abs(target - Robot.lift.getLiftEncoder()) > Constants.acceptableHeightRange);
+		return !(Math.abs(target - Robot.elevatorSS.getLiftEncoder()) > Constants.acceptableHeightRange);
 	}
 	
 	public boolean isWithinTightRange(double target){
-		return !(Math.abs(target - Robot.lift.getLiftEncoder()) > Constants.acceptableTightHeightRange);
+		return !(Math.abs(target - Robot.elevatorSS.getLiftEncoder()) > Constants.acceptableTightHeightRange);
 	}
 	
 	

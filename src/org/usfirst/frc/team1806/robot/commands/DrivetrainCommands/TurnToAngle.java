@@ -3,7 +3,7 @@ package org.usfirst.frc.team1806.robot.commands.DrivetrainCommands;
 import org.usfirst.frc.team1806.robot.Constants;
 import org.usfirst.frc.team1806.robot.Robot;
 import org.usfirst.frc.team1806.robot.subsystems.DrivetrainSS;
-import static org.usfirst.frc.team1806.robot.Robot.dtSS;
+import static org.usfirst.frc.team1806.robot.Robot.drivetrainSS;
 
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -20,7 +20,7 @@ public class TurnToAngle extends PIDCommand {
     public TurnToAngle(double angle, double maxTurnPower) {
     	
     	super(Constants.drivetrainRotateP, Constants.drivetrainRotateI, Constants.drivetrainRotateD);
-        requires(Robot.dtSS); 
+        requires(Robot.drivetrainSS); 
         m_angle = angle;
         m_maxTurnPower = maxTurnPower;
         getPIDController().setContinuous(true);
@@ -46,7 +46,7 @@ public class TurnToAngle extends PIDCommand {
 
     // Called once after isFinished returns true
     protected void end() {
-    	dtSS.arcadeDrive(0, 0);
+    	drivetrainSS.arcadeDrive(0, 0);
     }
 
     // Called when another command which requires one or more of the same
@@ -57,7 +57,7 @@ public class TurnToAngle extends PIDCommand {
 	@Override
 	protected double returnPIDInput() {
 		// TODO Auto-generated method stub
-		return dtSS.getAngle();
+		return drivetrainSS.getAngle();
 	}
 
 	@Override
@@ -65,11 +65,11 @@ public class TurnToAngle extends PIDCommand {
 		// TODO Auto-generated method stub
 		
 		if (output > m_maxTurnPower) {
-    		dtSS.arcadeDrive(0, m_maxTurnPower);
+    		drivetrainSS.arcadeDrive(0, m_maxTurnPower);
     	} else if (output < -m_maxTurnPower) {
-    		dtSS.arcadeDrive(0, -m_maxTurnPower);
+    		drivetrainSS.arcadeDrive(0, -m_maxTurnPower);
     	} else {
-    		dtSS.arcadeDrive(0, output);
+    		drivetrainSS.arcadeDrive(0, output);
     	}
 		
 	}

@@ -14,17 +14,17 @@ public class MoveCanToStackingHeight extends Command {
 	private boolean movingDown;
 	
     public MoveCanToStackingHeight() {
-        requires(Robot.lift);
+        requires(Robot.elevatorSS);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	//you need to move down
-    	if(Robot.lift.getLiftEncoder() > Constants.stackingCanHoldHeight){
-    		Robot.lift.moveDown();
+    	if(Robot.elevatorSS.getLiftEncoder() > Constants.stackingCanHoldHeight){
+    		Robot.elevatorSS.moveDown();
     		movingDown = true;
     	}else{
-    		Robot.lift.moveUp();
+    		Robot.elevatorSS.moveUp();
     		movingDown = false;
     	}
     }
@@ -37,22 +37,22 @@ public class MoveCanToStackingHeight extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
         if(movingDown){
-        	return (Robot.lift.getLiftEncoder() < Constants.stackingCanHoldHeight);
+        	return (Robot.elevatorSS.getLiftEncoder() < Constants.stackingCanHoldHeight);
         }else{
-        	return (Robot.lift.getLiftEncoder() > Constants.stackingCanHoldHeight);
+        	return (Robot.elevatorSS.getLiftEncoder() > Constants.stackingCanHoldHeight);
         }
     }
 
     // Called once after isFinished returns true
     protected void end() {
     	Robot.statesObj.canSequenceStateTracker = States.canSequenceState.STACKHEIGHT;
-    	Robot.lift.disable();
-    	Robot.lift.stop();
+    	Robot.elevatorSS.disable();
+    	Robot.elevatorSS.stop();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	Robot.lift.disable();
+    	Robot.elevatorSS.disable();
     }
 }

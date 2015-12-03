@@ -11,13 +11,13 @@ public class ManualMove extends Command {
 
 	private double m_speed;
     public ManualMove(double speed) {
-        requires(Robot.lift);
+        requires(Robot.elevatorSS);
         m_speed = speed;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.lift.manualMove(m_speed);
+    	Robot.elevatorSS.manualMove(m_speed);
     }
 
     // Called repeatedly when this Command is scheduled to run
