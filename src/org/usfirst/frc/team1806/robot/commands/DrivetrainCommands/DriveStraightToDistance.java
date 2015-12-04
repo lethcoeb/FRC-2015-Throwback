@@ -40,7 +40,7 @@ public class DriveStraightToDistance extends PIDCommand {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return getPIDController().onTarget();
+        return (getPIDController().onTarget() && drivetrainSS.getLeftRate() <=.1); 
     }
 
     // Called once after isFinished returns true
@@ -62,7 +62,7 @@ public class DriveStraightToDistance extends PIDCommand {
 	@Override
 	protected void usePIDOutput(double output) {
 		
-		drivetrainSS.arcadeDrive(-output, P * -drivetrainSS.getAngle());
+		drivetrainSS.arcadeDrive(-output, P * drivetrainSS.getAngle());
 		
 	}
 }

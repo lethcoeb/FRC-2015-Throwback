@@ -12,21 +12,30 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Intake extends Subsystem {
 	
+	private boolean intakeRunning;
 	Talon rightIntake = new Talon(RobotMap.rightIntakeMotor);
 	Talon leftIntake = new Talon(RobotMap.leftIntakeMotor);
     
 	public Intake(){
+		
+		intakeRunning = false;
 			
 	}
 	
     public void runAtSpeed(double speed){
     	rightIntake.set(speed);
     	leftIntake.set(-speed);
+    	intakeRunning = true;
     }
     
     public void stop(){
     	rightIntake.set(0);
     	leftIntake.set(0);
+    	intakeRunning = false;
+    }
+    
+    public boolean isRunning(){
+    	return intakeRunning;
     }
 
     public void initDefaultCommand() {

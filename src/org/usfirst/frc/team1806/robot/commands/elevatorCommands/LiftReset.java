@@ -20,7 +20,6 @@ public class LiftReset extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	Robot.elevatorSS.secondStageRelease();
-    	Robot.elevatorSS.openArms();
     	if(!Robot.elevatorSS.getBottomLimit()){
     		Robot.elevatorSS.moveDownSlow();
     	}
@@ -37,6 +36,7 @@ public class LiftReset extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	
     	Robot.elevatorSS.openArms();
     	Robot.elevatorSS.stop();
     	Robot.elevatorSS.retractArms();

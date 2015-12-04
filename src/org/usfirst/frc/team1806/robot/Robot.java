@@ -119,16 +119,16 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	Scheduler.getInstance().run();
         
-        drivetrainSS.arcadeDrive(dc.getLeftJoyY(), dc.getRightJoyX());
+        //drivetrainSS.arcadeDrive(dc.getLeftJoyY(), dc.getRightJoyX());
         
-        oi.update();
+        oi.update2();
         if(autoStack.update(((elevatorSS.getOpticalSensor() && statesObj.liftPositionTracker == States.liftPosition.ZEROED) || oc.getRawButton(7)) && statesObj.liftPositionTracker == States.liftPosition.ZEROED) && (statesObj.canSequenceStateTracker == States.canSequenceState.WAITING)){
         	
         	new AutoStack().start();
         }else if((Robot.statesObj.canSequenceStateTracker == States.canSequenceState.STACKHEIGHT || Robot.statesObj.canSequenceStateTracker == States.canSequenceState.MOVETONEXT) && elevatorSS.getOpticalSensor()){
         	new PlaceCanOnTote().start();
         }
-        writeToDashboard();
+        //writeToDashboard();
         
         if(statesObj.dataLogStateTracker == States.dataLogState.ON){
         	d.writeData(String.valueOf(Robot.elevatorSS.getLiftEncoder()), String.valueOf(t.get()), String.valueOf(elevatorSS.getLiftPowerPercentage()));

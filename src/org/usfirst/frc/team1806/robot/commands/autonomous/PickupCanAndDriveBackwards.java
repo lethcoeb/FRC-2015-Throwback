@@ -14,7 +14,7 @@ public class PickupCanAndDriveBackwards extends CommandGroup {
     public  PickupCanAndDriveBackwards() {
         
     	addSequential(new CloseArms());
-    	addSequential(new MoveToTarget(Constants.stackingCanHoldHeight));
+    	addParallel(new MoveToTarget(Constants.stackingCanHoldHeight));
     	addParallel(new WaitThenDrive(2, -24));
     	
     	

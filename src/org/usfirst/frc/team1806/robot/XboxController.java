@@ -45,11 +45,13 @@ public class XboxController {
      */
     
     public double getRightTrigger() {
-        return Math.max(getRawAxis(3), 0);
+        return getRawAxis(3);
+    	//return Math.max(getRawAxis(3), 0);
     }
 
     public double getLeftTrigger() {
-        return Math.max(getRawAxis(2), 0);
+        return getRawAxis(2);
+    	//return Math.max(getRawAxis(2), 0);
     }
 
     public double getRightJoyX() {

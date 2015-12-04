@@ -9,8 +9,8 @@ public class Constants {
 		public static double elevatorI = 0.0003;
 		public static double elevatorD = 0;
 	
-		public static double drivetrainDriveP = .1;
-		public static double drivetrainDriveI = .01;
+		public static double drivetrainDriveP = 1;
+		public static double drivetrainDriveI = 0;
 		public static double drivetrainDriveD = 0;
 	//in inches
 		public static double drivetrainDistanceTolerance = 1;
@@ -21,6 +21,7 @@ public class Constants {
 		public static double drivetrainAngleTolerance = 2.0;
 	
 	//controller constants
+		public static double driveStickDeadzone = .02;
 		public static double operatorLS_Y_Deadzone = .1;
 		public static double triggerDeadzone = .05;
 	
