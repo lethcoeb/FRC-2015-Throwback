@@ -42,3 +42,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 build.properties
+
+*.properties
+
+*.jar
+
+*.jar

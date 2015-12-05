@@ -156,6 +156,14 @@ public class Robot extends IterativeRobot {
         
         //drivetrainSS.arcadeDrive(dc.getLeftJoyY(), dc.getRightJoyX());
         
+    	if(Robot.statesObj.liftPositionTracker == States.liftPosition.ZEROED) {
+    		compressor.setClosedLoopControl(true);
+
+    	} else {
+    		compressor.setClosedLoopControl(false);
+    		
+    	}
+    	
         oi.update2();
         if(autoStack.update(((elevatorSS.getOpticalSensor() && statesObj.liftPositionTracker == States.liftPosition.ZEROED) || oc.getRawButton(7)) && statesObj.liftPositionTracker == States.liftPosition.ZEROED) && (statesObj.canSequenceStateTracker == States.canSequenceState.WAITING)){
         	
