@@ -34,6 +34,9 @@ public class DrivetrainSS extends Subsystem{
     	leftEncoder = new Encoder(RobotMap.lDriveEncA, RobotMap.lDriveEncB);
     	rightEncoder = new Encoder(RobotMap.rDriveEncA, RobotMap.rDriveEncB);
     	
+    	//to get rid of annoying errors lol
+    	rd.setSafetyEnabled(false);
+    	
     	//leftEncoder.setDistancePerPulse(1/256);
     }
     
@@ -43,6 +46,16 @@ public class DrivetrainSS extends Subsystem{
     
     public double getAngle(){
     	return navx.getAngle();
+    }
+    
+    public double getAngle180(){
+		if(navx.getAngle() <= 180){
+			return navx.getAngle();
+		}else{
+			//angle is greater than 180
+			//returns negative values up to 180
+			return navx.getAngle() - 360;
+		}
     }
     
     public void resetAngle(){

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1806.robot.commands.autonomous.PickupCanAndDriveBackwards;
+import org.usfirst.frc.team1806.robot.commands.autonomous.TresTotalizador;
 import org.usfirst.frc.team1806.robot.commands.canSequenceCommands.PlaceCanOnTote;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.AutoStack;
 import org.usfirst.frc.team1806.robot.subsystems.DrivetrainSS;
@@ -96,7 +97,7 @@ public class Robot extends IterativeRobot {
 	}
 
     public void autonomousInit() {
-        autonomousCommand = new PickupCanAndDriveBackwards();
+        autonomousCommand = new TresTotalizador();
         if (autonomousCommand != null) autonomousCommand.start();
     }
 
@@ -152,7 +153,6 @@ public class Robot extends IterativeRobot {
     	Scheduler.getInstance().run();
     	
     	updateConstants();
-    	System.out.println(drivetrainSS.getRightRate());
         
         //drivetrainSS.arcadeDrive(dc.getLeftJoyY(), dc.getRightJoyX());
         

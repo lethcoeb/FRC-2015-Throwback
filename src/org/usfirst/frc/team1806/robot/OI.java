@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc.team1806.robot.States;
 import org.usfirst.frc.team1806.robot.commands.DrivetrainCommands.DriveStraightToDistance;
+import org.usfirst.frc.team1806.robot.commands.DrivetrainCommands.StayAtAngle;
 import org.usfirst.frc.team1806.robot.commands.DrivetrainCommands.TurnToAngle;
 import org.usfirst.frc.team1806.robot.commands.IntakeCommands.IntakeRun;
 import org.usfirst.frc.team1806.robot.commands.IntakeCommands.IntakeStop;
@@ -29,6 +30,8 @@ public class OI {
 	private Latch armsClampLatch = new Latch();
 	private Latch armsExtendLatch = new Latch();
 	private Latch robotModeLatch = new Latch();
+	private Latch driverDTLatch = new Latch();
+	public static boolean driverDTControl = true;
 	
 	private Latch rsLatch = new Latch();
 	
@@ -58,8 +61,8 @@ public class OI {
 		//buttons that are always listened for
 		//basically the dumbest thing ever
 		
-		operatorButtonRS.whenPressed(new DriveStraightToDistance(36, .75));
-		//operatorButtonRS.whenPressed(new TurnToAngle(90.0, 0.7));
+		//operatorButtonRS.whenPressed(new DriveStraightToDistance(36, .75));
+		operatorButtonRS.whenPressed(new DriveStraightToDistance(24, .75));
 		
 	}
 	
@@ -200,9 +203,14 @@ public class OI {
 		LTrigger = dController.getLeftTrigger();
 		RTrigger = dController.getRightTrigger();
 		
+		if(driverDTLatch.update(dController.getButtonX())){
+			driverDTControl = !driverDTControl;
+		}
+		
 		if(Math.abs(dController.getLeftJoyY()) > Constants.driveStickDeadzone  || Math.abs(dController.getRightJoyX()) > Constants.driveStickDeadzone){
-			//taken out for command testing
-			//Robot.drivetrainSS.arcadeDrive(lStickY-Constants.driveStickDeadzone, rStickX-Constants.driveStickDeadzone);
+			if(driverDTControl){
+				Robot.drivetrainSS.arcadeDrive(lStickY-Constants.driveStickDeadzone, rStickX-Constants.driveStickDeadzone);
+			}
 		}
 		
 		if((LTrigger > .1 || RTrigger > .1) && Robot.statesObj.driverIntakeControlTracker == States.driverIntakeControl.DRIVER && !Robot.intakeSS.isRunning()){
@@ -214,9 +222,7 @@ public class OI {
 			}
 			
 		}
-		
-		System.out.println(String.valueOf(Robot.intakeSS.isRunning()));
-		
+				
 		if(dController.getButtonLB()){
 			if(Robot.elevatorSS.getBottomLimit()){
 				new LiftReset().start();

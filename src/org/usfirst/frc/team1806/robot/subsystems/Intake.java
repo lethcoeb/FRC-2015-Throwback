@@ -28,6 +28,16 @@ public class Intake extends Subsystem {
     	intakeRunning = true;
     }
     
+    public void run1D(boolean runLeft){
+    	if(runLeft){
+    		rightIntake.set(-.75);
+    		leftIntake.set(-.75);
+    	}else{
+    		rightIntake.set(.75);
+    		leftIntake.set(.75);
+    	}
+    }
+    
     public void stop(){
     	rightIntake.set(0);
     	leftIntake.set(0);

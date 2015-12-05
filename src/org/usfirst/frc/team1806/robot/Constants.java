@@ -52,10 +52,10 @@ public class Constants {
 			public static double elevatorD = 0;
 		
 			public static double drivetrainDriveP = 1;
-			public static double drivetrainDriveI = 0;
-			public static double drivetrainDriveD = 0;
+			public static double drivetrainDriveI = .0175;
+			public static double drivetrainDriveD = .14;
 		//in inches
-			public static double drivetrainDistanceTolerance = 1;
+			public static double drivetrainDistanceTolerance = 2;
 			
 			
 			public static double drivetrainRotateP = .05;
