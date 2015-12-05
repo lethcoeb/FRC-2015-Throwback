@@ -30,6 +30,8 @@ public class OI {
 	private Latch armsExtendLatch = new Latch();
 	private Latch robotModeLatch = new Latch();
 	
+	private Latch rsLatch = new Latch();
+	
 	private double lStickY;
 	private double rStickX;
 	private double manualLiftPower;
@@ -56,7 +58,7 @@ public class OI {
 		//buttons that are always listened for
 		//basically the dumbest thing ever
 		
-		//operatorButtonRS.whenPressed(new DriveStraightToDistance(12));
+		operatorButtonRS.whenPressed(new DriveStraightToDistance(36, .75));
 		//operatorButtonRS.whenPressed(new TurnToAngle(90.0, 0.7));
 		
 	}
@@ -199,7 +201,8 @@ public class OI {
 		RTrigger = dController.getRightTrigger();
 		
 		if(Math.abs(dController.getLeftJoyY()) > Constants.driveStickDeadzone  || Math.abs(dController.getRightJoyX()) > Constants.driveStickDeadzone){
-			Robot.drivetrainSS.arcadeDrive(lStickY-Constants.driveStickDeadzone, rStickX-Constants.driveStickDeadzone);
+			//taken out for command testing
+			//Robot.drivetrainSS.arcadeDrive(lStickY-Constants.driveStickDeadzone, rStickX-Constants.driveStickDeadzone);
 		}
 		
 		if((LTrigger > .1 || RTrigger > .1) && Robot.statesObj.driverIntakeControlTracker == States.driverIntakeControl.DRIVER && !Robot.intakeSS.isRunning()){
@@ -221,6 +224,17 @@ public class OI {
 			}else{
 				new LiftReset().start();
 			}	
+		}else if(driverController.getRawButton(1)){
+			if(Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK && Robot.statesObj.liftPositionTracker == States.liftPosition.ZEROED){
+				Robot.statesObj.robotModeTracker = States.robotMode.CANSEQUENCE;
+				Robot.statesObj.liftPositionTracker = States.liftPosition.OTHER;
+				new CanPickupSequence().start();
+			}
+			
+			else if(Robot.statesObj.liftPositionTracker == States.liftPosition.OTHER && Robot.elevatorSS.getLiftEncoder() > 75){
+					//Prevents double pressing at the start of the sequence.
+					Robot.statesObj.canSequenceStateTracker = States.canSequenceState.MOVETONEXT;
+			}
 		}
 				
 		if(oController.getButtonA() || dController.getButtonRB()){

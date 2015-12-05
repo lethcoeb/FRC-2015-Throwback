@@ -13,7 +13,7 @@ public class WaitThenDrive extends CommandGroup {
     public  WaitThenDrive(double time, double distance) {
         
     	addSequential(new Wait(time));
-    	addSequential(new DriveStraightToDistance(distance));
+    	addSequential(new DriveStraightToDistance(distance, .6));
     	
     }
 }

@@ -64,6 +64,10 @@ public class DrivetrainSS extends Subsystem{
     	return (leftEncoder.getRaw() / 55.04167);
     }
     
+    public double getRightInches(){
+    	return (rightEncoder.getRaw() / 55.04167);
+    }
+    
     public double getLeftDistance(){
     	return leftEncoder.getDistance();
     }

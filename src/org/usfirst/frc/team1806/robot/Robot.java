@@ -4,6 +4,7 @@ package org.usfirst.frc.team1806.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
@@ -34,8 +35,8 @@ public class Robot extends IterativeRobot {
 	public static Elevator elevatorSS;
 	public static Intake intakeSS;
 	
-	//test commit message for slack
-	
+
+	Preferences prefs;
 	
 	
 	public logData d = new logData();
@@ -58,6 +59,22 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+    	
+    	prefs = Preferences.getInstance();
+    	
+    	prefs.putDouble("DrivetrainDriveP", Constants.drivetrainDriveP);
+    	prefs.putDouble("DrivetrainDriveI", Constants.drivetrainDriveI);
+    	prefs.putDouble("DrivetrainDriveD", Constants.drivetrainDriveD);
+    	
+    	prefs.putDouble("DrivetrainRotateP", Constants.drivetrainRotateP);
+    	prefs.putDouble("DrivetrainRotateI", Constants.drivetrainRotateI);
+    	prefs.putDouble("DrivetrainRotateD", Constants.drivetrainRotateD);
+    	
+    	prefs.putDouble("ElevatorP", Constants.elevatorP);
+    	prefs.putDouble("ElevatorI", Constants.elevatorI);
+    	prefs.putDouble("ElevatorD", Constants.elevatorD);
+    	
+    	prefs.putDouble("secondStageHeight", Constants.secondStageHeight);
     	
     	drivetrainSS = new DrivetrainSS();
     	elevatorSS = new Elevator(Constants.elevatorP , Constants.elevatorI, Constants.elevatorD);
@@ -91,6 +108,21 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopInit() {
+    	//TODO: Make this a class.
+    	prefs.putDouble("DrivetrainDriveP", Constants.drivetrainDriveP);
+    	prefs.putDouble("DrivetrainDriveI", Constants.drivetrainDriveI);
+    	prefs.putDouble("DrivetrainDriveD", Constants.drivetrainDriveD);
+    	
+    	prefs.putDouble("DrivetrainRotateP", Constants.drivetrainRotateP);
+    	prefs.putDouble("DrivetrainRotateI", Constants.drivetrainRotateI);
+    	prefs.putDouble("DrivetrainRotateD", Constants.drivetrainRotateD);
+    	
+    	prefs.putDouble("ElevatorP", Constants.elevatorP);
+    	prefs.putDouble("ElevatorI", Constants.elevatorI);
+    	prefs.putDouble("ElevatorD", Constants.elevatorD);
+    	
+    	prefs.putDouble("secondStageHeight", Constants.secondStageHeight);
+    	
         if (autonomousCommand != null) autonomousCommand.cancel();
         compressor.setClosedLoopControl(true);
         
@@ -118,6 +150,9 @@ public class Robot extends IterativeRobot {
    
     public void teleopPeriodic() {
     	Scheduler.getInstance().run();
+    	
+    	updateConstants();
+    	System.out.println(drivetrainSS.getRightRate());
         
         //drivetrainSS.arcadeDrive(dc.getLeftJoyY(), dc.getRightJoyX());
         
@@ -136,6 +171,22 @@ public class Robot extends IterativeRobot {
         
         
         
+    }
+    
+    public void updateConstants(){
+    	Constants.drivetrainDriveP = prefs.getDouble("DrivetrainDriveP", Constants.drivetrainDriveP);
+    	Constants.drivetrainDriveI = prefs.getDouble("DrivetrainDriveI", Constants.drivetrainDriveI);
+    	Constants.drivetrainDriveD = prefs.getDouble("DrivetrainDriveD", Constants.drivetrainDriveD);
+    	
+    	Constants.drivetrainRotateP = prefs.getDouble("DrivetrainRotateP", Constants.drivetrainRotateP);
+    	Constants.drivetrainRotateI = prefs.getDouble("DrivetrainRotateI", Constants.drivetrainRotateI);
+    	Constants.drivetrainRotateD = prefs.getDouble("DrivetrainRotateD", Constants.drivetrainRotateD);
+    	
+    	Constants.elevatorP = prefs.getDouble("ElevatorP", Constants.elevatorP);
+    	Constants.elevatorI = prefs.getDouble("ElevatorI", Constants.elevatorI);
+    	Constants.elevatorD = prefs.getDouble("ElevatorD", Constants.elevatorD);
+    	
+    	Constants.secondStageHeight = prefs.getDouble("secondStageHeight", Constants.secondStageHeight);
     }
     
     public void writeToDashboard(){
