@@ -1,47 +1,42 @@
-package org.usfirst.frc.team1806.robot.commands.elevatorCommands;
+package org.usfirst.frc.team1806.robot.commands.canrighting;
 
 import org.usfirst.frc.team1806.robot.Robot;
-import org.usfirst.frc.team1806.robot.States;
 
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class LiftReset extends Command {
+public class SetCanDown extends Command {
 
-    public LiftReset() {
-    	requires(Robot.elevatorSS);
+	private boolean hasReleased = false;
+	
+    public SetCanDown() {
+        requires(Robot.elevatorSS);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.elevatorSS.secondStageRelease();
-    	if(!Robot.elevatorSS.getBottomLimit()){
-    		Robot.elevatorSS.moveDownSlow();
-    	}
+    	Robot.elevatorSS.moveDown();
+    	
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	if(!hasReleased && Robot.elevatorSS.getLiftEncoder() < 400){
+    		Robot.elevatorSS.openArms();
+    		Robot.elevatorSS.retractArms();
+    		hasReleased = true;
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.elevatorSS.getBottomLimit();
+        return Robot.elevatorSS.getLiftEncoder() < 300;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	
-    	Robot.elevatorSS.openArms();
-    	Robot.elevatorSS.stop();
-    	Robot.elevatorSS.retractArms();
-    	Robot.elevatorSS.resetEncoder();
-
-    	Robot.statesObj.reset();
-    	System.out.println("now in auto mode");
     }
 
     // Called when another command which requires one or more of the same

@@ -80,12 +80,14 @@ public class Constants {
 				public static double highCanHoldHeight = 2000;
 				public static double stackingCanHoldHeight = 1300;
 				public static double canReleaseHeight = 700;
+				public static double canRightingHighHeight = 800;
+				public static double canRightingLowHeight = 100;
 			
 			//auto movement
 		
 		//check for if elevator is in desired range, +- the value.
 				public static double acceptableTightHeightRange = 2;
-			public static double acceptableHeightRange = 7;
+			public static double acceptableHeightRange = 5;
 	
 	
 }

@@ -1,9 +1,8 @@
 package org.usfirst.frc.team1806.robot;
 
 
-import org.omg.CORBA.PRIVATE_MEMBER;
-
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * Use an XBox controller like a regular Joystick class
@@ -12,12 +11,13 @@ import edu.wpi.first.wpilibj.DriverStation;
  * 
  * ^^THX JON^^
  */
-public class XboxController {
+public class XboxController extends Joystick {
 
     private DriverStation _ds;
     private final int _port;
 
     public XboxController(int port) {
+    	super(port);
         _ds = DriverStation.getInstance();
         _port = port;
     }

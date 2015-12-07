@@ -220,7 +220,7 @@ public class Elevator extends PIDSubsystem {
 		brakeOff();
 		if(Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK){
 			if(Robot.statesObj.totesHeld == 0){
-				elevatorMotorTalon.set( output* .8);
+				elevatorMotorTalon.set( output* .85);
 			}else if(Robot.statesObj.totesHeld == 1){
 				elevatorMotorTalon.set( output* .98);
 

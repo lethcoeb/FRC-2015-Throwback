@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1806.robot;
 
+import org.usfirst.frc.team1806.robot.commands.canSequenceCommands.CanPickupSequence;
+
 public class States {
 	
 	public States(){
@@ -23,7 +25,7 @@ public class States {
 	}
 	
 	public enum robotMode{
-		AUTOSTACK, MANUAL, CANSEQUENCE
+		AUTOSTACK, MANUAL, CANSEQUENCE, CANRIGHTINGSEQUENCE
 	}
 	
 	public enum elevatorCommand{
@@ -46,6 +48,10 @@ public class States {
 		DRIVER, AUTOMATIC
 	}
 	
+	public enum canRightingMoveOn{
+		MOVEON, WAITING
+	}
+	
 	public int totesHeld;
 	
 	
@@ -60,6 +66,7 @@ public class States {
 	public dataLogState dataLogStateTracker;
 	public canSequenceState canSequenceStateTracker;
 	public driverIntakeControl driverIntakeControlTracker;
+	public canRightingMoveOn canRightingMoveOnTracker;
 	
 	public void reset(){
 		secondStageStateTracker = secondStageState.SECOND_STAGE_RELEASED;
@@ -74,6 +81,7 @@ public class States {
 		canSequenceStateTracker = canSequenceState.WAITING;
 		totesHeld = 0;
 		driverIntakeControlTracker = driverIntakeControl.DRIVER;
+		canRightingMoveOnTracker = canRightingMoveOn.WAITING;
 	}
 	
 

@@ -21,6 +21,9 @@ public class MoveToSecondStage extends Command {
     protected void initialize() {
     	
     	Robot.elevatorSS.moveUp();
+    	
+    	//to prevent getting stuck
+    	setTimeout(3);
 	
     }
 
@@ -33,7 +36,13 @@ public class MoveToSecondStage extends Command {
     	    if(Robot.elevatorSS.getLiftEncoder() > Constants.secondStagePIDEngage && !pidControl){
     	    	if(Robot.statesObj.totesHeld == 0){
     	    		Robot.elevatorSS.enable();
-    	    		Robot.elevatorSS.setSetpoint(Constants.secondStageHeight);
+    	    		Robot.elevatorSS.setSetpoint(Constants.secondStageHeight-15);
+    	    	}else if(Robot.statesObj.totesHeld == 1){
+    	    		Robot.elevatorSS.enable();
+    	    		Robot.elevatorSS.setSetpoint(Constants.secondStageHeight-10);
+    	    	}else if(Robot.statesObj.totesHeld == 2){
+    	    		Robot.elevatorSS.enable();
+    	    		Robot.elevatorSS.setSetpoint(Constants.secondStageHeight-5);
     	    	}else{
     	    	
     	    		Robot.elevatorSS.enable();

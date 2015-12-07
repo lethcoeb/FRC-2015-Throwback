@@ -10,9 +10,11 @@ import org.usfirst.frc.team1806.robot.commands.DrivetrainCommands.TurnToAngle;
 import org.usfirst.frc.team1806.robot.commands.IntakeCommands.IntakeRun;
 import org.usfirst.frc.team1806.robot.commands.IntakeCommands.IntakeStop;
 import org.usfirst.frc.team1806.robot.commands.canSequenceCommands.CanPickupSequence;
+import org.usfirst.frc.team1806.robot.commands.canrighting.CanRightingCommandGroup;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.DropSequence;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.ExtendArms;
 import org.usfirst.frc.team1806.robot.commands.elevatorCommands.LiftReset;
+import org.usfirst.frc.team1806.robot.commands.elevatorCommands.LiftZero;
 
 
 /**
@@ -59,6 +61,8 @@ public class OI {
 	public OI(){
 		
 		//buttons that are always listened for
+		//Always
+		//ALWAYS!!!!!!!!!!!!!!!!!!!!!
 		//basically the dumbest thing ever
 		
 		//operatorButtonRS.whenPressed(new DriveStraightToDistance(36, .75));
@@ -155,7 +159,7 @@ public class OI {
 					Robot.elevatorSS.extendArms();
 				}
 				
-			}if(armsExtendLatch.update(operatorController.getRawButton(3))){
+			}else if(armsExtendLatch.update(operatorController.getRawButton(3))){
 				if(Robot.statesObj.clampStateTracker == States.clampState.ARMS_CLAMPED){
 					Robot.elevatorSS.openArms();
 				}else{
@@ -203,9 +207,20 @@ public class OI {
 		LTrigger = dController.getLeftTrigger();
 		RTrigger = dController.getRightTrigger();
 		
-		if(driverDTLatch.update(dController.getButtonX())){
+		
+		/*if(driverDTLatch.update(dController.getButtonX())){
 			driverDTControl = !driverDTControl;
-		}
+		}*/
+		
+		if(dController.getButtonX()){
+			if(Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK){
+				Robot.statesObj.robotModeTracker = States.robotMode.CANRIGHTINGSEQUENCE;
+				new CanRightingCommandGroup().start();
+			}
+			Robot.statesObj.canRightingMoveOnTracker = States.canRightingMoveOn.MOVEON;
+		}else{
+			Robot.statesObj.canRightingMoveOnTracker = States.canRightingMoveOn.WAITING;
+ 		}
 		
 		if(Math.abs(dController.getLeftJoyY()) > Constants.driveStickDeadzone  || Math.abs(dController.getRightJoyX()) > Constants.driveStickDeadzone){
 			if(driverDTControl){
@@ -223,14 +238,18 @@ public class OI {
 			
 		}
 				
+		//RESET COMMANDS
 		if(dController.getButtonLB()){
 			if(Robot.elevatorSS.getBottomLimit()){
 				new LiftReset().start();
 				Robot.elevatorSS.openArms();
 			}else{
+				Robot.statesObj.robotModeTracker = States.robotMode.AUTOSTACK;
 				new LiftReset().start();
 			}	
-		}else if(driverController.getRawButton(1)){
+			
+		//CAN SEQUENCE COMMANDS
+		}else if(dController.getButtonA()){
 			if(Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK && Robot.statesObj.liftPositionTracker == States.liftPosition.ZEROED){
 				Robot.statesObj.robotModeTracker = States.robotMode.CANSEQUENCE;
 				Robot.statesObj.liftPositionTracker = States.liftPosition.OTHER;
@@ -240,6 +259,10 @@ public class OI {
 			else if(Robot.statesObj.liftPositionTracker == States.liftPosition.OTHER && Robot.elevatorSS.getLiftEncoder() > 75){
 					//Prevents double pressing at the start of the sequence.
 					Robot.statesObj.canSequenceStateTracker = States.canSequenceState.MOVETONEXT;
+			}
+		}else if(dController.getButtonB()){
+			if(Robot.elevatorSS.getBottomLimit()){
+				new LiftZero().start();
 			}
 		}
 				
@@ -254,7 +277,11 @@ public class OI {
 				Robot.statesObj.driverIntakeControlTracker = States.driverIntakeControl.AUTOMATIC;
 				new ExtendArms().start();
 				new IntakeRun(-.4).start();
-			}else if(Robot.statesObj.robotModeTracker == States.robotMode.MANUAL){
+			}
+			
+			//Commented out because it's taken care of in the manual mode else/if.
+			
+			/*else if(Robot.statesObj.robotModeTracker == States.robotMode.MANUAL){
 				if (armsExtendLatch.update(oController.getButtonY())){
 					if(Robot.statesObj.extendStateTracker == States.extendState.ARMS_EXTENDED){
 						Robot.elevatorSS.retractArms();
@@ -262,15 +289,15 @@ public class OI {
 						Robot.elevatorSS.extendArms();
 					}
 				}
-			}
-		}else if(oController.getButtonX()){
-			if(armsClampLatch.update(oController.getButtonX())){
+			}*/
+		/*else if(oController.getButtonX()){
+			if(armsClampLatch.update(oController.getButtonX()) && Robot.statesObj.robotModeTracker == States.robotMode.MANUAL){
 				if(Robot.statesObj.clampStateTracker == States.clampState.ARMS_CLAMPED){
 					Robot.elevatorSS.openArms();
 				}else{
 					Robot.elevatorSS.closeArms();
 				}
-			}
+			}*/
 		}else if(robotModeLatch.update(oController.getButtonRB())){
 			if(Robot.statesObj.robotModeTracker == States.robotMode.AUTOSTACK){
 				Robot.elevatorSS.disable();
@@ -282,6 +309,34 @@ public class OI {
 				System.out.println("now in auto mode");
 			}
 		}
+		
+		//Commands for manual mode
+		if(Robot.statesObj.robotModeTracker == States.robotMode.MANUAL){
+			
+			manualLiftPower = -operatorController.getRawAxis(1);
+			
+			if(armsClampLatch.update(operatorController.getRawButton(4))){
+				if(Robot.statesObj.extendStateTracker == States.extendState.ARMS_EXTENDED){
+					Robot.elevatorSS.retractArms();
+				}else{
+					Robot.elevatorSS.extendArms();
+				}
+				
+			}if(armsExtendLatch.update(operatorController.getRawButton(3))){
+				if(Robot.statesObj.clampStateTracker == States.clampState.ARMS_CLAMPED){
+					Robot.elevatorSS.openArms();
+				}else{
+					Robot.elevatorSS.closeArms();
+				}
+				
+			}if(Math.abs(manualLiftPower) > Constants.operatorLS_Y_Deadzone && Robot.elevatorSS.isSafe(manualLiftPower)){
+				Robot.elevatorSS.manualMove(manualLiftPower);
+			}else{
+				Robot.elevatorSS.stop();
+			}
+			
+		}
+		
 	}
 }
 	

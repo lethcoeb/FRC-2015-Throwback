@@ -1,30 +1,30 @@
-package org.usfirst.frc.team1806.robot.commands.elevatorCommands;
+package org.usfirst.frc.team1806.robot.commands.canrighting;
 
 import org.usfirst.frc.team1806.robot.Robot;
 import org.usfirst.frc.team1806.robot.States;
+import org.usfirst.frc.team1806.robot.States.canRightingMoveOn;
 
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class LiftReset extends Command {
+public class ClampAndDown extends Command {
 
-    public LiftReset() {
-    	requires(Robot.elevatorSS);
+    public ClampAndDown() {
+        requires(Robot.elevatorSS);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.elevatorSS.secondStageRelease();
-    	if(!Robot.elevatorSS.getBottomLimit()){
-    		Robot.elevatorSS.moveDownSlow();
-    	}
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	if(Robot.statesObj.canRightingMoveOnTracker == States.canRightingMoveOn.MOVEON){
+    		Robot.elevatorSS.moveDownMedium();
+    		Robot.elevatorSS.closeArms();
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -34,14 +34,7 @@ public class LiftReset extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	
-    	Robot.elevatorSS.openArms();
-    	Robot.elevatorSS.stop();
-    	Robot.elevatorSS.retractArms();
-    	Robot.elevatorSS.resetEncoder();
-
-    	Robot.statesObj.reset();
-    	System.out.println("now in auto mode");
+    	Robot.statesObj.canRightingMoveOnTracker = States.canRightingMoveOn.WAITING;
     }
 
     // Called when another command which requires one or more of the same
