@@ -58,6 +58,10 @@ public class DrivetrainSS extends Subsystem{
 		}
     }
     
+    public double getRotationRate(){
+    	return navx.getRate();
+    }
+    
     public void resetAngle(){
     	navx.zeroYaw();
     }

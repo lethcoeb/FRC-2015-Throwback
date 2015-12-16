@@ -51,20 +51,36 @@ public class Constants {
 			public static double elevatorI = 0.0003;
 			public static double elevatorD = 0;
 		
-			public static double drivetrainDriveP = 1;
+			/*public static double drivetrainDriveP = 1;
 			public static double drivetrainDriveI = .0175;
-			public static double drivetrainDriveD = .14;
+			public static double drivetrainDriveD = .14;*/
+			
+			public static double drivetrainDriveP = .403;
+			public static double drivetrainDriveI = .0001;
+			//1.8 is okay for D i think
+			public static double drivetrainDriveD = 1.75;
+			
+			
+			public static double drivetrainDrivePSlow = .4;
+			public static double drivetrainDriveISlow = 0;
+			public static double drivetrainDriveDSlow = 1.8;
+			
+			
 		//in inches
-			public static double drivetrainDistanceTolerance = 2;
+			public static double drivetrainDistanceTolerance = .2;
 			
 			
-			public static double drivetrainRotateP = .05;
+			/*public static double drivetrainRotateP = .05;
 			public static double drivetrainRotateI = .01;
-			public static double drivetrainRotateD = 0;
+			public static double drivetrainRotateD = 0;*/
+			
+			public static double drivetrainRotateP = .035;
+			public static double drivetrainRotateI = .0;
+			public static double drivetrainRotateD = .07;
 			
 			
 		//in degrees
-			public static double drivetrainAngleTolerance = 2.0;
+			public static double drivetrainAngleTolerance = 1.0;
 		
 		//controller constants
 			public static double driveStickDeadzone = .02;

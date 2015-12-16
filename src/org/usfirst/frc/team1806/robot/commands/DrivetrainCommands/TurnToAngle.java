@@ -20,7 +20,7 @@ public class TurnToAngle extends PIDCommand {
     public TurnToAngle(double angle, double maxTurnPower) {
     	
     	super(Constants.drivetrainRotateP, Constants.drivetrainRotateI, Constants.drivetrainRotateD);
-        requires(Robot.drivetrainSS); 
+        requires(Robot.drivetrainSS);
         m_angle = angle;
         m_maxTurnPower = maxTurnPower;
         getPIDController().setContinuous(true);
@@ -32,7 +32,9 @@ public class TurnToAngle extends PIDCommand {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.drivetrainSS.resetAngle();
     	setSetpoint(m_angle);
+    	Robot.oi.driverDTControl = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -41,11 +43,12 @@ public class TurnToAngle extends PIDCommand {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return getPIDController().onTarget();
+    	return Math.abs(Robot.drivetrainSS.getAngle180() - m_angle) < Constants.drivetrainAngleTolerance && Math.abs(Robot.drivetrainSS.getRotationRate()) < .5;
     }
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.oi.driverDTControl = true;
     	drivetrainSS.arcadeDrive(0, 0);
     }
 
@@ -57,7 +60,7 @@ public class TurnToAngle extends PIDCommand {
 	@Override
 	protected double returnPIDInput() {
 		// TODO Auto-generated method stub
-		return drivetrainSS.getAngle();
+		return drivetrainSS.getAngle180();
 	}
 
 	@Override

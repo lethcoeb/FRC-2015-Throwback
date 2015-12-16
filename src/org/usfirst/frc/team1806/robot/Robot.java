@@ -171,7 +171,8 @@ public class Robot extends IterativeRobot {
         }else if((Robot.statesObj.canSequenceStateTracker == States.canSequenceState.STACKHEIGHT || Robot.statesObj.canSequenceStateTracker == States.canSequenceState.MOVETONEXT) && elevatorSS.getOpticalSensor()){
         	new PlaceCanOnTote().start();
         }
-        //writeToDashboard();
+        
+        writeToDashboard();
         
         if(statesObj.dataLogStateTracker == States.dataLogState.ON){
         	d.writeData(String.valueOf(Robot.elevatorSS.getLiftEncoder()), String.valueOf(t.get()), String.valueOf(elevatorSS.getLiftPowerPercentage()));
@@ -213,6 +214,12 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putString("canSequenceState", statesObj.canSequenceStateTracker.toString());
         
         SmartDashboard.putData(Scheduler.getInstance());
+        
+        SmartDashboard.putNumber("180 deg angle", drivetrainSS.getAngle180());
+        SmartDashboard.putNumber("rotation rate", drivetrainSS.getRotationRate());
+        
+        SmartDashboard.putNumber("distance traveled", (drivetrainSS.getRightInches() + drivetrainSS.getLeftInches())/2);
+        
 
     }
     

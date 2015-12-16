@@ -19,8 +19,8 @@ public class TresTotalizador extends CommandGroup {
     	addParallel(new AutoStack());
     	addSequential(new Wait(1));
     	addParallel(new Intake1D(true));
-    	addParallel(new DriveStraightToDistance(12, .3));
-    	addSequential(new DriveStraightToDistance(12, .8));
+    	addParallel(new DriveStraightToDistance(12, .3, false));
+    	addSequential(new DriveStraightToDistance(12, .8, true));
     	
     }
 }

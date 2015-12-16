@@ -6,14 +6,20 @@ import org.usfirst.frc.team1806.robot.Robot;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import static org.usfirst.frc.team1806.robot.Robot.drivetrainSS;
 
 /**
  *
  */
-public class DriveStraightToDistance extends PIDCommand {
-
+public class DriveStraightToDistance extends Command {
+	
+	private static double m_driveP;
+	private static double m_driveI;
+	private static double m_driveD;
+	
 	private double m_distance;
 	private double m_maxSpeed;
 	
@@ -21,18 +27,54 @@ public class DriveStraightToDistance extends PIDCommand {
 	private double ITurn = .000045;
 	private double DTurn = 0;
 	
+	private PIDController dController;
+	private PIDSource Dps;
+	private PIDOutput Dpo;
+	
 	private PIDController tController;
 	private PIDSource ps;
 	private PIDOutput po;
 	
 	private double tValue;
+	private boolean m_moveFast;
 	
-    public DriveStraightToDistance(double distance, double maxSpeed) {
+    public DriveStraightToDistance(double distance, double maxSpeed, boolean moveFast) {
     	
-        super(Constants.drivetrainDriveP, Constants.drivetrainDriveI, Constants.drivetrainDriveD);
-    	requires(drivetrainSS);
+    	requires(Robot.drivetrainSS);
     	m_distance = distance;
     	m_maxSpeed = maxSpeed;
+    	m_moveFast = moveFast;
+    	    	
+    	if(m_moveFast){
+    		m_driveP = Constants.drivetrainDriveP;
+    		m_driveI = Constants.drivetrainDriveI;
+    		m_driveD = Constants.drivetrainDriveD;
+    	}else{
+    		//u moving slow
+    		m_driveP = Constants.drivetrainDrivePSlow;
+    		m_driveI = Constants.drivetrainDriveISlow;
+    		m_driveD = Constants.drivetrainDriveDSlow;
+    	}
+    	
+    	Dps = new PIDSource(){
+
+			@Override
+			public double pidGet() {
+				return (drivetrainSS.getLeftInches() + drivetrainSS.getRightInches())/2;
+			}
+    	};
+    	
+    	Dpo = new PIDOutput() {
+			
+			@Override
+			public void pidWrite(double output) {
+				if(Math.abs(output) < m_maxSpeed){
+					drivetrainSS.arcadeDrive(-output, tValue);
+				}else{
+					drivetrainSS.arcadeDrive(Math.signum(output) * -m_maxSpeed, tValue);
+				}
+			}
+		};
     	
     	ps = new PIDSource() {
 			
@@ -55,16 +97,16 @@ public class DriveStraightToDistance extends PIDCommand {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	    	
     	drivetrainSS.resetAngle();
     	drivetrainSS.resetEncoders();
     	
-    	getPIDController().setContinuous(false);
-        getPIDController().setAbsoluteTolerance(Constants.drivetrainDistanceTolerance);
-        getPIDController().setOutputRange(-1, 1);
-        
-        Robot.oi.driverDTControl = false;
-    	
-    	setSetpoint(m_distance);
+    	dController = new PIDController(m_driveP, m_driveI, m_driveD, Dps, Dpo);
+    	dController.setContinuous(false);
+    	dController.setAbsoluteTolerance(Constants.drivetrainDistanceTolerance);
+    	dController.setOutputRange(-1, 1);
+    	dController.enable();
+    	dController.setSetpoint(m_distance);
     	
     	tController = new PIDController(PTurn, ITurn, DTurn, ps, po);
 		tController.setAbsoluteTolerance(1);
@@ -72,10 +114,15 @@ public class DriveStraightToDistance extends PIDCommand {
 		tController.setContinuous();
 		tController.enable();
 		tController.setSetpoint(0);
+		
+		Robot.oi.driverDTControl = false;
+	
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -87,7 +134,7 @@ public class DriveStraightToDistance extends PIDCommand {
 
     // Called once after isFinished returns true
     protected void end() {
-    	getPIDController().disable();
+    	dController.disable();
     	tController.disable();
        	Robot.oi.driverDTControl = true;
     	System.out.println("DriveStraight PID Loop Finished");
@@ -97,20 +144,4 @@ public class DriveStraightToDistance extends PIDCommand {
     // subsystems is scheduled to run
     protected void interrupted() {
     }
-
-	@Override
-	protected double returnPIDInput() {
-		// TODO Auto-generated method stub
-		return (drivetrainSS.getLeftInches() + drivetrainSS.getRightInches())/2;
-	}
-
-	@Override
-	protected void usePIDOutput(double output) {
-		if(Math.abs(output) < m_maxSpeed){
-			drivetrainSS.arcadeDrive(-output, tValue);
-		}else{
-			drivetrainSS.arcadeDrive(Math.signum(output) * -m_maxSpeed, tValue);
-		}
-		
-	}
 }
