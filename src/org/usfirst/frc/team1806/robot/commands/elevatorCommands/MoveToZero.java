@@ -35,7 +35,7 @@ public class MoveToZero extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	return Robot.elevatorSS.isWithinRange(0);
+    	return Robot.elevatorSS.getBottomLimit();
     }
 
     // Called once after isFinished returns true

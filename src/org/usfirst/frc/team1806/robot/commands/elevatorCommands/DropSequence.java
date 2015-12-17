@@ -28,17 +28,12 @@ public class DropSequence extends CommandGroup {
     		addSequential(new LiftReset());
     	}
     	
-    	//need to add handlers for other states that you'd call drop sequence from
-    	
-    	//if you're holding the drop button, then it should keep dropping while you back up maybe????
-    	/*else if(Robot.lift.getLiftEncoder() <= 0){
-    		addSequential(new OpenArms());
+    	if(Robot.statesObj.extendStateTracker != States.extendState.ARMS_EXTENDED && Robot.statesObj.liftPositionTracker != States.liftPosition.ZEROED) {
+    		addSequential(new SecondStageRelease());
+    		addSequential(new MoveToZero());
+    		addSequential(new LiftReset());
     	}
-    	
-    	//if the arms aren't extended AND ur lift is in the air, just drop what u got fam
-    	else{
-    		addSequential(new MoveToTarget(0));
-    		addSequential(new OpenArms());
-    	}*/
+    	//if your in manuel and ur high in the air trying to drop a stack on another sn00p dogg.
+
     }
 }

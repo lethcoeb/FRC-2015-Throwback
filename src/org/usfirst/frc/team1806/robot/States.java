@@ -9,6 +9,7 @@ public class States {
 	}
 	
 	public enum secondStageState{
+		//used for tracking second stage pos
 		SECOND_STAGE_HOLDING, SECOND_STAGE_RELEASED
 	}
 	public enum liftState{
@@ -21,14 +22,19 @@ public class States {
 		ARMS_EXTENDED, ARMS_RETRACTED
 	}
 	public enum liftPosition{
+		//tracks lift position
+		//zeroed is useful
 		HOLDING_STATE, ZEROED, OTHER
 	}
 	
 	public enum robotMode{
+		//tracks mode that robot is in
+		//used for driver/op controls
 		AUTOSTACK, MANUAL, CANSEQUENCE, CANRIGHTINGSEQUENCE
 	}
 	
 	public enum elevatorCommand{
+		//used for waiting for operator's a button when autostacking
 		WAITING, MOVETONEXT
 	}
 	

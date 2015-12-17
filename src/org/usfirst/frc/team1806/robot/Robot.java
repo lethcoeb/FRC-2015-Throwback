@@ -165,6 +165,7 @@ public class Robot extends IterativeRobot {
     	}
     	
         oi.update2();
+        
         if(autoStack.update(((elevatorSS.getOpticalSensor() && statesObj.liftPositionTracker == States.liftPosition.ZEROED) || oc.getRawButton(7)) && statesObj.liftPositionTracker == States.liftPosition.ZEROED) && (statesObj.canSequenceStateTracker == States.canSequenceState.WAITING)){
         	
         	new AutoStack().start();
