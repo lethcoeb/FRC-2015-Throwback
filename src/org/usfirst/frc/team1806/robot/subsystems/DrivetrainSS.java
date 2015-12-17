@@ -22,6 +22,9 @@ public class DrivetrainSS extends Subsystem{
 
     RobotDrive rd = new RobotDrive(RobotMap.leftDriveMotor, RobotMap.rightDriveMotor);
     
+    private double m_throttle;
+    private double m_turn;
+    
     public DrivetrainSS(){
     	    	
     	try{
@@ -42,6 +45,16 @@ public class DrivetrainSS extends Subsystem{
     
     public void arcadeDrive(double throttle, double turn){
     	rd.arcadeDrive(throttle, -turn);
+    	m_throttle = throttle;
+    	m_turn = turn;
+    }
+    
+    public double getPower(){
+    	return m_throttle;
+    }
+    
+    public double getTurn(){
+    	return m_turn;
     }
     
     public double getAngle(){

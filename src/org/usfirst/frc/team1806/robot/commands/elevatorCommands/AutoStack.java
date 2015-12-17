@@ -15,6 +15,7 @@ public class AutoStack extends CommandGroup {
     
     public  AutoStack() {
     	
+    	requires(Robot.elevatorSS);
 
     	addSequential(new CloseArms());
     	addSequential(new Wait(.25));

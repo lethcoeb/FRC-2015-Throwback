@@ -56,7 +56,7 @@ public class Constants {
 			public static double drivetrainDriveD = .14;*/
 			
 			public static double drivetrainDriveP = .403;
-			public static double drivetrainDriveI = .0001;
+			public static double drivetrainDriveI = .1;
 			//1.8 is okay for D i think
 			public static double drivetrainDriveD = 1.75;
 			

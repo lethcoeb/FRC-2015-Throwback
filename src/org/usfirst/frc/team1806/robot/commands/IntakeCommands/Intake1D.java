@@ -12,6 +12,7 @@ public class Intake1D extends Command {
 	private boolean m_runLeft;
 	
     public Intake1D(boolean runLeft) {
+    	requires(Robot.intakeSS);
         m_runLeft = runLeft;
     }
 

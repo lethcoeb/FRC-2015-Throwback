@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static org.usfirst.frc.team1806.robot.Robot.drivetrainSS;
 
 /**
@@ -19,6 +20,8 @@ public class DriveStraightToDistance extends Command {
 	private static double m_driveP;
 	private static double m_driveI;
 	private static double m_driveD;
+	
+	private boolean iEnabled = false;
 	
 	private double m_distance;
 	private double m_maxSpeed;
@@ -40,6 +43,7 @@ public class DriveStraightToDistance extends Command {
 	
     public DriveStraightToDistance(double distance, double maxSpeed, boolean moveFast) {
     	
+    	setTimeout(distance/8);
     	requires(Robot.drivetrainSS);
     	m_distance = distance;
     	m_maxSpeed = maxSpeed;
@@ -47,12 +51,12 @@ public class DriveStraightToDistance extends Command {
     	    	
     	if(m_moveFast){
     		m_driveP = Constants.drivetrainDriveP;
-    		m_driveI = Constants.drivetrainDriveI;
+    		m_driveI = 0;
     		m_driveD = Constants.drivetrainDriveD;
     	}else{
     		//u moving slow
     		m_driveP = Constants.drivetrainDrivePSlow;
-    		m_driveI = Constants.drivetrainDriveISlow;
+    		m_driveI = 0;
     		m_driveD = Constants.drivetrainDriveDSlow;
     	}
     	
@@ -73,6 +77,10 @@ public class DriveStraightToDistance extends Command {
 				}else{
 					drivetrainSS.arcadeDrive(Math.signum(output) * -m_maxSpeed, tValue);
 				}
+				
+				//TODO: Remove me!!!!
+				SmartDashboard.putNumber("power", Robot.drivetrainSS.getPower());
+				SmartDashboard.putNumber("Turn", Robot.drivetrainSS.getTurn());
 			}
 		};
     	
@@ -122,6 +130,15 @@ public class DriveStraightToDistance extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	
+    	if(!iEnabled && Math.abs((drivetrainSS.getRightInches() + drivetrainSS.getLeftInches())/2) < .4 
+    		&& (drivetrainSS.getLeftRate() + drivetrainSS.getRightRate())/2 <=.05){
+    		if(m_moveFast){
+    			dController.setPID(Constants.drivetrainDriveP, Constants.drivetrainDriveI, Constants.drivetrainDriveD * .9);
+    		}else{
+    			dController.setPID(Constants.drivetrainDrivePSlow, Constants.drivetrainDriveISlow, Constants.drivetrainDriveDSlow * .9);
+    		}
+    		iEnabled = true;
+    	}
     	
     }
 
@@ -129,7 +146,7 @@ public class DriveStraightToDistance extends Command {
     protected boolean isFinished() {
     	//top one drifts, bottom one stops at target
         //return ((drivetrainSS.getRightInches() + drivetrainSS.getLeftInches())/2 > m_distance);
-    	return (Math.abs((drivetrainSS.getRightInches() + drivetrainSS.getLeftInches())/2 - m_distance) < Constants.drivetrainDistanceTolerance && (drivetrainSS.getLeftRate() + drivetrainSS.getRightRate())/2 <=.1 && (drivetrainSS.getLeftRate() + drivetrainSS.getRightRate())/2 >= 0 ); 
+    	return (Math.abs((drivetrainSS.getRightInches() + drivetrainSS.getLeftInches())/2 - m_distance) < Constants.drivetrainDistanceTolerance && (drivetrainSS.getLeftRate() + drivetrainSS.getRightRate())/2 <=.05 && (drivetrainSS.getLeftRate() + drivetrainSS.getRightRate())/2 >= 0 ); 
     }
 
     // Called once after isFinished returns true

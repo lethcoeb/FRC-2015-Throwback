@@ -24,7 +24,7 @@ public class LiftZero extends Command {
     protected void execute() {
     	if(Robot.elevatorSS.getLiftEncoder() > 100){
     		hasHit = true;
-    		Robot.elevatorSS.moveDown();
+    		Robot.elevatorSS.moveDownSlow();
     	}
     	
     }

@@ -66,7 +66,7 @@ public class OI {
 		//basically the dumbest thing ever
 		
 		operatorButtonX.whenPressed(new TurnToAngle(90, .9));
-		operatorButtonRS.whenPressed(new DriveStraightToDistance(24, .75, true));
+		operatorButtonRS.whenPressed(new DriveStraightToDistance(48, .75, true));
 		
 	}
 	
