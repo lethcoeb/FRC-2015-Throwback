@@ -17,6 +17,8 @@ public class LiftReset extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.statesObj.driverIntakeControlTracker = States.driverIntakeControl.DRIVER;
+    	Robot.intakeSS.stop();
     	Robot.elevatorSS.secondStageRelease();
     	if(!Robot.elevatorSS.getBottomLimit()){
     		Robot.elevatorSS.moveDownSlow();

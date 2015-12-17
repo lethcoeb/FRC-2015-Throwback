@@ -34,6 +34,7 @@ public class ClampAndDown extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.elevatorSS.stop();
     	Robot.statesObj.canRightingMoveOnTracker = States.canRightingMoveOn.WAITING;
     }
 
