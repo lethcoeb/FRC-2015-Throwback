@@ -143,6 +143,10 @@ public class Elevator extends PIDSubsystem {
 		elevatorMotorTalon.set(0);
 	}
 	
+	public double getSpeed(){
+		return elevatorMotorTalon.get();
+	}
+	
 	public void openArms(){
 		armsPinch.set(DoubleSolenoid.Value.kForward);
 		Robot.statesObj.clampStateTracker = States.clampState.ARMS_OPEN;
@@ -196,6 +200,10 @@ public class Elevator extends PIDSubsystem {
 	
 	public void resetEncoder(){
 		liftEncoder.reset();
+	}
+	
+	public boolean isEnabled(){
+		return this.isEnabled();
 	}
 	
     public void initDefaultCommand() {

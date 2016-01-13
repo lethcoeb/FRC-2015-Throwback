@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc.team1806.robot.States;
+import org.usfirst.frc.team1806.robot.Commands.opACommands;
+import org.usfirst.frc.team1806.robot.Commands.resetCommand;
 import org.usfirst.frc.team1806.robot.commands.DrivetrainCommands.DriveStraightToDistance;
 import org.usfirst.frc.team1806.robot.commands.DrivetrainCommands.StayAtAngle;
 import org.usfirst.frc.team1806.robot.commands.DrivetrainCommands.TurnToAngle;
@@ -42,6 +44,8 @@ public class OI {
 	private double manualLiftPower;
 	public double LTrigger;
 	public double RTrigger;
+	
+	public Commands m_commands;
 	
 	JoystickButton driverButtonA = new JoystickButton(driverController, 1);
 	JoystickButton driverButtonB = new JoystickButton(driverController, 2);
@@ -166,7 +170,7 @@ public class OI {
 					Robot.elevatorSS.closeArms();
 				}
 				
-			}if(Math.abs(manualLiftPower) > Constants.operatorLS_Y_Deadzone && Robot.elevatorSS.isSafe(manualLiftPower)){
+			}else if(Math.abs(manualLiftPower) > Constants.operatorLS_Y_Deadzone && Robot.elevatorSS.isSafe(manualLiftPower)){
 				Robot.elevatorSS.manualMove(manualLiftPower);
 			}else{
 				Robot.elevatorSS.stop();
@@ -338,6 +342,25 @@ public class OI {
 		}
 		
 	}
+	
+	public Commands updateCmds(){
+		
+		if(dController.getButtonLB()){
+			m_commands.resetCommandTracker = resetCommand.ON;
+		}else{
+			m_commands.resetCommandTracker = resetCommand.OFF;
+		}
+		
+		if(dController.getButtonA()){
+			m_commands.opACommandsTracker = opACommands.ON;
+		}else{
+			m_commands.opACommandsTracker = opACommands.OFF;
+		}
+		
+		return m_commands;
+		
+	}
+	
 }
 	
 
