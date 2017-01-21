@@ -103,7 +103,18 @@ public class Constants {
 		
 		//check for if elevator is in desired range, +- the value.
 				public static double acceptableTightHeightRange = 2;
-			public static double acceptableHeightRange = 5;
+				public static double acceptableHeightRange = 5;
+			
+		//Autonomous Constants
+			//in inches
+				//TODO: Get exact measurements from the old code (though maybe just start over)
+				public static double firstCanDistance = 20;
+				public static double secondToteDistance = 20;
+				public static double secondCanDistance = 20;
+				public static double thirdToteDistance =20;
+				public static double dropOffDistance = 20;
+				public static double backUpDistance = 20;
+				
 	
 	
 }
